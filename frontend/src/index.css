@@ -1,0 +1,63 @@
+:root {
+  --bg-primary: #05050a;
+  --bg-secondary: #0d0d18;
+  --bg-card: #111120;
+  --bg-card-hover: #161628;
+  --accent-red: #ff2d55;
+  --accent-orange: #ff6b35;
+  --accent-green: #00e5a0;
+  --accent-blue: #4d9fff;
+  --accent-purple: #c77dff;
+  --text-primary: #f0f0ff;
+  --text-secondary: #8888aa;
+  --text-muted: #555570;
+  --border: #1e1e35;
+  --border-bright: #2e2e55;
+  --glow-red: rgba(255, 45, 85, 0.15);
+  --glow-green: rgba(0, 229, 160, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+::selection {
+  background: rgba(255, 45, 85, 0.3);
+  color: white;
+}
+
+.font-syne {
+  font-family: 'Syne', sans-serif;
+}
+
+.font-mono {
+  font-family: 'Space Mono', monospace;
+}
