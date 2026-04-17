@@ -73,7 +73,7 @@ const CustomTooltip = ({ active, payload }) => {
   );
 };
 
-export default function ResultsPage({ data, onBack }) {
+export default function ResultsPage({ data, onBack, theme, onToggleTheme }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [commentFilter, setCommentFilter] = useState('all');
   const [commentSearch, setCommentSearch] = useState('');
@@ -175,7 +175,12 @@ export default function ResultsPage({ data, onBack }) {
           <span className="logo-icon">◈</span>
           <span className="logo-text">ToxiScan</span>
         </div>
-        <div className="nav-badge font-mono">Analysis Complete</div>
+        <div className="results-nav-right">
+          <button className="theme-toggle" onClick={onToggleTheme} type="button">
+            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <div className="nav-badge font-mono">Analysis Complete</div>
+        </div>
       </nav>
 
       {/* Video Info */}

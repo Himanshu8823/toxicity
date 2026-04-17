@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './AboutPage.css';
 
-export default function AboutPage({ onBack }) {
+export default function AboutPage({ onBack, theme, onToggleTheme }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
 
@@ -73,7 +73,9 @@ export default function AboutPage({ onBack }) {
           <span className="logo-icon">◈</span>
           <span className="logo-text">ToxiScan</span>
         </div>
-        <div style={{ width: '80px' }} />
+        <button className="theme-toggle" onClick={onToggleTheme} type="button">
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        </button>
       </nav>
 
       {/* Hero */}

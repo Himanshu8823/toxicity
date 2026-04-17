@@ -105,6 +105,26 @@
   color: var(--accent-red);
 }
 
+.theme-toggle {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+
+.theme-toggle:hover {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
 .nav-badge {
   font-family: 'Space Mono', monospace;
   font-size: 0.7rem;
@@ -915,6 +935,11 @@
     gap: 12px;
     width: 100%;
     justify-content: space-between;
+  }
+
+  .theme-toggle {
+    font-size: 0.68rem;
+    padding: 6px 10px;
   }
 
   .hero { 

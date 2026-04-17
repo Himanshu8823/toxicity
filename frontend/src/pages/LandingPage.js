@@ -91,7 +91,7 @@ const FAQS = [
   },
 ];
 
-export default function LandingPage({ onAnalysis, onNavigate }) {
+export default function LandingPage({ onAnalysis, onNavigate, theme, onToggleTheme }) {
   const [url, setUrl] = useState('');
   const [maxComments, setMaxComments] = useState(50);
   const [loading, setLoading] = useState(false);
@@ -217,6 +217,9 @@ export default function LandingPage({ onAnalysis, onNavigate }) {
         </div>
         <div className="nav-links">
           <button className="nav-link" onClick={() => onNavigate?.('about')}>About Us</button>
+          <button className="theme-toggle" onClick={onToggleTheme} type="button">
+            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <div className="nav-badge">Powered by HuggingFace</div>
         </div>
       </nav>
