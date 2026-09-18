@@ -1,0 +1,349 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ToxiScan — ElevenLabs design system
+   Source: awesome-design-md/design-md/elevenlabs/DESIGN.md
+   Editorial print-magazine voice. Off-white canvas, warm near-black
+   ink, pastel atmospheric orbs as the only colour moments.
+   ============================================================ */
+
+@theme {
+  /* ---- Ink & action ---- */
+  --color-primary: #292524;
+  --color-primary-active: #0c0a09;
+  --color-ink: #0c0a09;
+
+  /* ---- Text ---- */
+  --color-body: #4e4e4e;
+  --color-body-strong: #292524;
+  --color-muted: #777169;
+  --color-muted-soft: #a8a29e;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #a8a29e;
+
+  /* ---- Hairlines ---- */
+  --color-hairline: #e7e5e4;
+  --color-hairline-soft: #f0efed;
+  --color-hairline-strong: #d6d3d1;
+
+  /* ---- Surfaces ---- */
+  --color-canvas: #f5f5f5;
+  --color-canvas-soft: #fafafa;
+  --color-canvas-deep: #0c0a09;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #f0efed;
+  --color-surface-dark: #0c0a09;
+  --color-surface-dark-elevated: #1c1917;
+
+  /* ---- Atmospheric gradient stops (decoration ONLY) ---- */
+  --color-gradient-mint: #a7e5d3;
+  --color-gradient-peach: #f4c5a8;
+  --color-gradient-lavender: #c8b8e0;
+  --color-gradient-sky: #a8c8e8;
+  --color-gradient-rose: #e8b8c4;
+
+  /* ---- Semantic ---- */
+  --color-semantic-error: #dc2626;
+  --color-semantic-success: #16a34a;
+
+  /* ---- Type families ---- */
+  --font-display: var(--font-eb-garamond), "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* ---- Spacing (4px base; 96px section rhythm) ---- */
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-base: 16px;
+  --spacing-md: 20px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 96px;
+
+  /* ---- Radius ---- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 24px;
+  --radius-pill: 9999px;
+
+  /* ---- Elevation: hairline + a single soft drop tier ---- */
+  --shadow-soft-drop: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-soft-drop-lg: 0 8px 32px rgba(0, 0, 0, 0.06);
+
+  /* ---- Container ---- */
+  --container-editorial: 1200px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  border-color: var(--color-hairline);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-ink);
+  color: var(--color-on-primary);
+}
+
+/* Display copy stays at weight 300 — the editorial signature. Never bold. */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  color: var(--color-ink);
+}
+
+/* ============================================================
+   Typography scale — DESIGN.md hierarchy
+   ============================================================ */
+
+@utility display-mega {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1.92px;
+}
+
+@utility display-xl {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.96px;
+}
+
+@utility display-lg {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.17;
+  letter-spacing: -0.36px;
+}
+
+@utility display-md {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.13;
+  letter-spacing: -0.32px;
+}
+
+@utility display-sm {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+@utility title-md {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+@utility title-sm {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.44;
+  letter-spacing: 0.18px;
+}
+
+@utility body-md {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.16px;
+}
+
+@utility body-strong {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.16px;
+}
+
+@utility body-sm {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: 0.15px;
+}
+
+@utility caption {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+@utility caption-uppercase {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.96px;
+  text-transform: uppercase;
+}
+
+@utility btn-type {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@utility nav-link-type {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+/* Mobile display scaling — DESIGN.md responsive table */
+@media (max-width: 1023px) {
+  .display-mega { font-size: 48px; letter-spacing: -0.96px; }
+  .display-xl { font-size: 40px; letter-spacing: -0.8px; }
+}
+
+@media (max-width: 639px) {
+  .display-mega { font-size: 32px; letter-spacing: -0.64px; line-height: 1.1; }
+  .display-xl { font-size: 30px; letter-spacing: -0.6px; }
+  .display-lg { font-size: 26px; letter-spacing: -0.26px; }
+  .display-md { font-size: 24px; }
+}
+
+/* ============================================================
+   Component primitives
+   ============================================================ */
+
+@utility editorial-container {
+  width: 100%;
+  max-width: var(--container-editorial);
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+@media (min-width: 640px) {
+  .editorial-container { padding-inline: 24px; }
+}
+
+@media (min-width: 1024px) {
+  .editorial-container { padding-inline: 48px; }
+}
+
+/* Section rhythm: 96px desktop, tightened on small screens */
+@utility section-rhythm {
+  padding-block: 96px;
+}
+
+@media (max-width: 639px) {
+  .section-rhythm { padding-block: 56px; }
+}
+
+@utility hairline-card {
+  background-color: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-xl);
+}
+
+/* ============================================================
+   Atmosphere — gradient orbs are decoration only.
+   Never a button fill, never a text colour, never a card surface.
+   ============================================================ */
+
+@utility orb {
+  position: absolute;
+  border-radius: var(--radius-pill);
+  filter: blur(60px);
+  opacity: 0.55;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(3%, -4%, 0) scale(1.06); }
+  66% { transform: translate3d(-3%, 3%, 0) scale(0.96); }
+}
+
+@utility orb-drifting {
+  animation: orb-drift 22s ease-in-out infinite;
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@utility fade-rise {
+  animation: fade-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ============================================================
+   Accessibility
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar — hairline dialect */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-canvas); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline-strong);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted-soft); }
