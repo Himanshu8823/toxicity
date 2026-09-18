@@ -194,7 +194,7 @@ function EmptyResultsState() {
       <div className="orb orb-drifting -z-10 h-72 w-72 bg-[var(--color-gradient-peach)]" />
       <p className="caption-uppercase text-muted">No results found</p>
       <h1 className="display-lg mt-3 text-ink">We couldn&apos;t find an analysis to show</h1>
-      <p className="body-md mt-3 max-w-md text-body">
+      <p className="body-md mt-3 max-w-[32rem] text-body">
         Your results may have expired, or you opened this page directly. Start a new analysis from
         the homepage to see a report here.
       </p>

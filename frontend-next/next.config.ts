@@ -7,11 +7,12 @@ import type { NextConfig } from 'next';
 const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:5000';
 
 const nextConfig: NextConfig = {
-  // Pin the workspace root: the repo has lockfiles at both the monorepo root
-  // and here, and Turbopack otherwise guesses (and warns) about which to use.
-  turbopack: {
-    root: __dirname,
-  },
+  // Turbopack's native Windows binary crashes silently on this machine
+  // (vercel/next.js#95015), so `dev` and `build` run webpack via --webpack.
+
+  // The repo has lockfiles at both the monorepo root and here, so Next has to
+  // be told which directory is the app's root instead of guessing.
+  outputFileTracingRoot: import.meta.dirname,
   async rewrites() {
     return [
       {

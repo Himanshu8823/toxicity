@@ -51,16 +51,10 @@
   --font-display: var(--font-eb-garamond), "Times New Roman", serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  /* ---- Spacing (4px base; 96px section rhythm) ---- */
-  --spacing-xxs: 4px;
-  --spacing-xs: 8px;
-  --spacing-sm: 12px;
-  --spacing-base: 16px;
-  --spacing-md: 20px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-xxl: 48px;
-  --spacing-section: 96px;
+  /* Spacing deliberately keeps Tailwind's own 4px-based scale. Defining
+     `--spacing-md` and friends here would silently rewrite every sizing
+     utility that shares the name — `max-w-md` resolved to 20px rather than
+     28rem — so the DESIGN.md rhythm lives in `section-rhythm` instead. */
 
   /* ---- Radius ---- */
   --radius-xs: 4px;

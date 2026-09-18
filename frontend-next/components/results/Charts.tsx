@@ -170,7 +170,7 @@ export function Charts({ labelStats }: ChartsProps) {
         >
           {hasData ? (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={rows} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+              <BarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <title>Comment count bar chart</title>
                 <XAxis
                   dataKey="display"
@@ -187,7 +187,7 @@ export function Charts({ labelStats }: ChartsProps) {
                   axisLine={false}
                   tickLine={false}
                   allowDecimals={false}
-                  width={36}
+                  width={44}
                 />
                 <Tooltip content={<ChartTooltip />} cursor={{ fill: 'var(--color-surface-strong)' }} />
                 <Bar dataKey="count" radius={[4, 4, 0, 0]}>
@@ -209,7 +209,7 @@ export function Charts({ labelStats }: ChartsProps) {
         >
           {hasData ? (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={rows} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+              <BarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <title>Average confidence bar chart</title>
                 <XAxis
                   dataKey="display"
@@ -226,7 +226,7 @@ export function Charts({ labelStats }: ChartsProps) {
                   axisLine={false}
                   tickLine={false}
                   domain={[0, 100]}
-                  width={36}
+                  width={44}
                   tickFormatter={(value: number) => `${value}%`}
                 />
                 <Tooltip content={<ChartTooltip />} cursor={{ fill: 'var(--color-surface-strong)' }} />

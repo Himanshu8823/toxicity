@@ -64,6 +64,13 @@ export default function LandingPage() {
             <Scene ariaHidden>
               <OrbField />
             </Scene>
+            {/* The orbs are atmosphere, not a backdrop to read against: this
+                scrim keeps the canvas opaque behind the headline column and
+                lets the colour bloom only in the empty right-hand space. */}
+            <div
+              className="absolute inset-0 bg-[linear-gradient(100deg,var(--color-canvas)_0%,var(--color-canvas)_34%,rgba(245,245,245,0.82)_50%,rgba(245,245,245,0.35)_68%,transparent_88%)]"
+              aria-hidden="true"
+            />
           </div>
           <div className="editorial-container relative pt-20 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24">
             <span className="caption-uppercase text-muted fade-rise">ToxiScan</span>

@@ -18,7 +18,7 @@ const DEFAULT_COLUMNS: FooterColumn[] = [
   {
     title: 'Product',
     links: [
-      { href: '/analyse', label: 'Analyse a video' },
+      { href: '/#analyse-form', label: 'Analyse a video' },
       { href: '/playground', label: 'Playground' },
       { href: '/about', label: 'About' },
     ],

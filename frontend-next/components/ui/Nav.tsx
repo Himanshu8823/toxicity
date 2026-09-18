@@ -17,7 +17,7 @@ export interface NavProps {
 }
 
 const DEFAULT_LINKS: NavLinkItem[] = [
-  { href: '/analyse', label: 'Analyse' },
+  { href: '/#analyse-form', label: 'Analyse' },
   { href: '/playground', label: 'Playground' },
   { href: '/about', label: 'About' },
 ];
@@ -35,7 +35,7 @@ function isActiveHref(pathname: string, href: string): boolean {
  */
 export function Nav({
   links = DEFAULT_LINKS,
-  ctaHref = '/analyse',
+  ctaHref = '/#analyse-form',
   ctaLabel = 'Analyse a video',
 }: NavProps) {
   const pathname = usePathname();

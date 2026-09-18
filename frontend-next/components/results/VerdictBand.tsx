@@ -44,8 +44,8 @@ export function VerdictBand({ analysis }: VerdictBandProps) {
     <section className="editorial-container relative pt-12 pb-4 sm:pt-16">
       <div className="orb orb-drifting -top-24 left-1/2 h-72 w-72 -translate-x-1/2 bg-[var(--color-gradient-lavender)] sm:h-96 sm:w-96" />
 
-      <div className="relative grid gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] sm:items-center">
-        <div className="fade-rise flex flex-col gap-4">
+      <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] lg:items-center">
+        <div className="fade-rise flex min-w-0 flex-col items-start gap-4">
           <span className="caption-uppercase text-muted">Overall read</span>
           <div className="flex items-baseline gap-4">
             <span className="display-mega text-ink">
@@ -54,7 +54,7 @@ export function VerdictBand({ analysis }: VerdictBandProps) {
             </span>
           </div>
           <h2 className="display-lg text-ink">{verdict.headline}</h2>
-          <p className="body-md max-w-md text-body">{verdict.detail}</p>
+          <p className="body-md w-full max-w-[32rem] text-body">{verdict.detail}</p>
           <p className="caption text-muted">
             Based on {analysis.totalAnalyzed.toLocaleString()} analysed comment
             {analysis.totalAnalyzed === 1 ? '' : 's'}
@@ -71,7 +71,7 @@ export function VerdictBand({ analysis }: VerdictBandProps) {
         </div>
 
         <div className="relative h-64 w-full sm:h-80">
-          <Scene ariaHidden cameraPosition={[0, 0, 6]}>
+          <Scene ariaHidden cameraPosition={[0, 0, 9.5]}>
             <ToxicitySpectrum distribution={distribution} />
           </Scene>
         </div>
