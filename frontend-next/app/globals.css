@@ -92,6 +92,11 @@ html {
 
 body {
   background-color: var(--color-canvas);
+  /* Pinned horizontal sections build tracks far wider than the viewport and
+     clip them locally; this is the backstop against anything still widening
+     the page. Kept off <html> so it stays the scroll container and the
+     sticky wrappers inside those sections keep working. */
+  overflow-x: hidden;
   color: var(--color-body);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -312,6 +317,36 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================
+   Lenis smooth-scroll — required classes from lenis.css
+   ============================================================ */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Anchor links inside the page must land below the sticky 64px nav. */
+.scroll-anchor-offset {
+  scroll-margin-top: 80px;
+}
+
+/* ============================================================
    Accessibility
    ============================================================ */
 
@@ -341,3 +376,74 @@ h1, h2, h3, h4 {
   border: 2px solid var(--color-canvas);
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-muted-soft); }
+
+/* ============================================================
+   Editorial grain overlay
+   Sits above the orbs (z-30), below content (z-40+), fixed so it
+   never repaints on scroll. Pointer-events: none always.
+   ============================================================ */
+
+/* ============================================================
+   Custom cursor — bold black arrow pointer, slightly larger than
+   the OS default so it reads more confidently on the warm canvas.
+   Touch devices fall back to the native cursor.
+   ============================================================ */
+
+html,
+body,
+a,
+button,
+[role="button"],
+input,
+textarea,
+select,
+[role="link"] {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M5 3 L5 23 L10 18 L13.5 25 L16 24 L12.5 17 L19 17 Z' fill='%230c0a09' stroke='%23ffffff' stroke-width='1.4' stroke-linejoin='round'/></svg>")
+      4 3,
+    auto;
+}
+
+@media (pointer: coarse) {
+  html,
+  body,
+  a,
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select,
+  [role="link"] {
+    cursor: auto;
+  }
+}
+
+
+
+@utility grain {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  /* SVG noise at 1% opacity gives the page a paper-like texture. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  will-change: opacity;
+}
+
+/* ============================================================
+   Depth-aware hover lift — soft shadow on hover for hairline cards.
+   Pairs with a transformed translate to make the lift feel physical.
+   ============================================================ */
+
+@utility lift-on-hover {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lift-on-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft-drop-lg);
+  border-color: var(--color-hairline-strong);
+}

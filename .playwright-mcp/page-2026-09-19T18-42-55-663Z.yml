@@ -1,0 +1,45 @@
+- generic [active] [ref=f7e1]:
+  - button "Open Next.js Dev Tools" [ref=f7e55] [cursor=pointer]
+  - alert [ref=f7e59]
+  - generic [ref=f7e83]:
+    - generic [ref=f7e84]:
+      - link "ToxiScan home" [ref=f7e86]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f7e87]:
+        - list [ref=f7e88]:
+          - listitem [ref=f7e89]:
+            - link "Overview" [ref=f7e90]:
+              - /url: /dashboard
+          - listitem [ref=f7e93]:
+            - link "History" [ref=f7e94]:
+              - /url: /dashboard/history
+          - listitem [ref=f7e97]:
+            - link "Saved" [ref=f7e98]:
+              - /url: /dashboard/saved
+          - listitem [ref=f7e101]:
+            - link "Reports" [ref=f7e102]:
+              - /url: /dashboard/reports
+          - listitem [ref=f7e105]:
+            - link "Settings" [ref=f7e106]:
+              - /url: /dashboard/settings
+      - generic [ref=f7e109]:
+        - generic [ref=f7e110]:
+          - generic [ref=f7e112]: U
+          - generic [ref=f7e113]:
+            - generic [ref=f7e114]: user-b
+            - generic [ref=f7e115]: user-b@neha-project.com
+        - button "Sign out" [ref=f7e116]
+    - main [ref=f7e118]:
+      - generic [ref=f7e119]:
+        - paragraph [ref=f7e120]: Overview
+        - heading "Welcome, user-b" [level=1] [ref=f7e121]
+      - generic [ref=f7e123]:
+        - heading "Your first comment section is one URL away" [level=2] [ref=f7e124]
+        - paragraph [ref=f7e125]: Paste a link to any public YouTube video and ToxiScan will read its comments — scoring each one across nine categories, in thirteen languages, and telling you which verdicts it is least sure about.
+        - generic [ref=f7e126]:
+          - link "Analyse a video" [ref=f7e127]:
+            - /url: /#analyse-form
+          - link "Try the playground" [ref=f7e128]:
+            - /url: /playground
+        - paragraph [ref=f7e130]: Nothing is analysed until you ask for it, and every scan stays on your account alone.

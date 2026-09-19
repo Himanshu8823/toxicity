@@ -1,0 +1,45 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - generic [ref=f7e3]:
+      - link "ToxiScan home" [ref=f7e5]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f7e6]:
+        - list [ref=f7e7]:
+          - listitem [ref=f7e8]:
+            - link "Overview" [ref=f7e9]:
+              - /url: /dashboard
+          - listitem [ref=f7e12]:
+            - link "History" [ref=f7e13]:
+              - /url: /dashboard/history
+          - listitem [ref=f7e16]:
+            - link "Saved" [ref=f7e17]:
+              - /url: /dashboard/saved
+          - listitem [ref=f7e20]:
+            - link "Reports" [ref=f7e21]:
+              - /url: /dashboard/reports
+          - listitem [ref=f7e24]:
+            - link "Settings" [ref=f7e25]:
+              - /url: /dashboard/settings
+      - generic [ref=f7e28]:
+        - generic [ref=f7e29]:
+          - generic [ref=f7e31]: U
+          - generic [ref=f7e32]:
+            - generic [ref=f7e33]: user-a
+            - generic [ref=f7e34]: user-a@neha-project.com
+        - button "Sign out" [ref=f7e35]
+    - main [ref=f7e37]:
+      - generic [ref=f7e38]:
+        - paragraph [ref=f7e39]: Overview
+        - heading "Welcome, user-a" [level=1] [ref=f7e40]
+      - generic [ref=f7e42]:
+        - heading "Your first comment section is one URL away" [level=2] [ref=f7e43]
+        - paragraph [ref=f7e44]: Paste a link to any public YouTube video and ToxiScan will read its comments — scoring each one across nine categories, in thirteen languages, and telling you which verdicts it is least sure about.
+        - generic [ref=f7e45]:
+          - link "Analyse a video" [ref=f7e46]:
+            - /url: /#analyse-form
+          - link "Try the playground" [ref=f7e47]:
+            - /url: /playground
+        - paragraph [ref=f7e49]: Nothing is analysed until you ask for it, and every scan stays on your account alone.
+  - button "Open Next.js Dev Tools" [ref=f7e55] [cursor=pointer]
+  - alert [ref=f7e59]

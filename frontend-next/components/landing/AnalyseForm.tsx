@@ -4,19 +4,24 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { analyzeVideo, extractVideoId, toApiMessage } from '@/lib/api';
+import { analyzeVideo, extractVideoId, isUnauthorised, toApiMessage } from '@/lib/api';
+import { createClient } from '@/lib/supabase/client';
+
+const PENDING_ANALYSE_URL_KEY = 'pending-analyse-url';
 
 const MIN_COMMENTS = 10;
 const MAX_COMMENTS = 200;
 const DEFAULT_COMMENTS = 50;
 
-/** Staged, honest status copy. No fake percentage — the backend genuinely
- * takes anywhere from ~10s to ~3min depending on comment count. */
+/** Staged, honest status copy. No fake percentage — the analysis genuinely
+ * takes anywhere from ~10s to ~3min depending on comment count, and the
+ * stages below mirror the real order of work in `lib/analysis/pipeline.ts`. */
 const STAGES: ReadonlyArray<{ at: number; label: string }> = [
   { at: 0, label: 'Fetching comments…' },
-  { at: 6, label: 'Scoring comments…' },
-  { at: 20, label: 'Scoring comments…' },
-  { at: 45, label: 'Aggregating results…' },
+  { at: 5, label: 'Detecting languages…' },
+  { at: 9, label: 'Scoring comments…' },
+  { at: 30, label: 'Checking for sarcasm and context…' },
+  { at: 60, label: 'Aggregating results…' },
 ];
 
 function currentStageLabel(elapsedSeconds: number): string {
@@ -97,13 +102,47 @@ export function AnalyseForm({ className }: AnalyseFormProps) {
     const controller = new AbortController();
     abortRef.current = controller;
 
+    const supabase = createClient();
+    const { data: sessionData } = await supabase.auth.getUser();
+
+    if (!sessionData.user) {
+      // Stash the URL so the Analyse tab on the dashboard can pick it up
+      // after sign-in. Without this, signing in would drop the intent.
+      try {
+        sessionStorage.setItem(PENDING_ANALYSE_URL_KEY, JSON.stringify({ url: trimmed, maxComments }));
+      } catch {
+        // sessionStorage can throw in private-mode edge cases — degrade silently.
+      }
+      stopTimer();
+      setIsLoading(false);
+      abortRef.current = null;
+      router.push(`/login?next=${encodeURIComponent('/dashboard/analyse')}`);
+      return;
+    }
+
     try {
       const data = await analyzeVideo(trimmed, maxComments, controller.signal);
-      sessionStorage.setItem('toxiscan:result', JSON.stringify(data));
-      router.push('/results');
+
+      // The scan row is the result. There is no longer a client-side view that
+      // can render a response we failed to persist, so a missing id is a real
+      // failure to report rather than something to route around.
+      const scanId = (data as { scanId?: string }).scanId;
+      if (!scanId) {
+        setRequestError(
+          'The analysis finished but could not be saved. Please try again.'
+        );
+        return;
+      }
+
+      router.push(`/dashboard/scans/${scanId}`);
     } catch (err) {
       if (controller.signal.aborted) {
         setRequestError('Analysis cancelled.');
+      } else if (isUnauthorised(err)) {
+        // Analysing a video requires an account. Send them to sign in and
+        // bring them back to the form rather than showing a dead end.
+        router.push(`/login?next=${encodeURIComponent('/#analyse-form')}`);
+        return;
       } else {
         setRequestError(toApiMessage(err));
       }
@@ -207,7 +246,8 @@ export function AnalyseForm({ className }: AnalyseFormProps) {
             </p>
           ) : (
             <p className="body-sm text-muted">
-              Public videos only. Nothing you analyse is stored.
+              Public videos only. Scans are saved to your account so you can
+              come back to them.
             </p>
           )}
         </div>

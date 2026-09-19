@@ -1,15 +1,20 @@
 {
   "name": "toxiscan",
-  "version": "1.0.0",
-  "description": "YouTube Comment Toxicity Analyzer — run both frontend and backend together",
+  "version": "2.0.0",
+  "description": "YouTube Comment Toxicity Analyzer — multilingual analysis, user dashboards, and an evaluation console",
   "scripts": {
-    "install:all": "npm install --prefix backend && npm install --prefix frontend-next",
-    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm start --prefix backend\" \"npm run dev --prefix frontend-next\"",
-    "start": "concurrently -n backend,frontend -c blue,magenta \"npm start --prefix backend\" \"npm run dev --prefix frontend-next\"",
-    "dev:backend": "npm start --prefix backend",
-    "dev:frontend": "npm run dev --prefix frontend-next",
+    "install:all": "npm install --prefix frontend-next",
+    "dev": "npm run dev --prefix frontend-next",
     "build": "npm run build --prefix frontend-next",
-    "typecheck": "npm run --prefix frontend-next typecheck",
+    "start": "npm run start --prefix frontend-next",
+    "typecheck": "npm run typecheck --prefix frontend-next",
+    "lint": "npm run lint --prefix frontend-next",
+    "db:migrate": "npm run db:migrate --prefix frontend-next",
+    "db:seed": "npm run db:seed --prefix frontend-next",
+    "db:setup": "npm run db:setup --prefix frontend-next",
+    "db:studio": "npm run db:studio --prefix frontend-next",
+    "check": "npm run check --prefix frontend-next",
+    "legacy:backend": "npm start --prefix backend",
     "legacy:frontend": "npm start --prefix frontend"
   },
   "devDependencies": {

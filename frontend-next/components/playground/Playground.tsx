@@ -1,107 +1,18 @@
 'use client';
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { ResultPanel } from '@/components/playground/ResultPanel';
+import { EXAMPLE_PROMPTS, type ExamplePrompt } from '@/components/playground/examples';
 import { analyzeText, toApiMessage } from '@/lib/api';
-import type { SingleTextResult } from '@/lib/types';
-import { LABEL_META, LABEL_ORDER } from '@/lib/labels';
-import { formatScore } from '@/lib/utils';
+import type { TextAnalysisResponse } from '@/lib/types';
 
 const MAX_CHARS = 1000;
 const DEBOUNCE_MS = 700;
 
-interface ExamplePrompt {
-  label: string;
-  text: string;
-}
-
-/**
- * A mix of neutral, mildly rude and hostile sample sentences so the model's
- * behaviour is legible across the range — deliberately mild, illustrative
- * rather than gratuitous. No slurs, no graphic content.
- */
-const EXAMPLE_PROMPTS: ExamplePrompt[] = [
-  {
-    label: 'Neutral',
-    text: 'Thanks for the detailed walkthrough, this really helped me understand the topic.',
-  },
-  {
-    label: 'Neutral',
-    text: 'I disagree with your conclusion, but I appreciate the effort you put into this video.',
-  },
-  {
-    label: 'Mildly rude',
-    text: "This is honestly kind of a lazy take, did you even research this before posting?",
-  },
-  {
-    label: 'Mildly rude',
-    text: 'Wow, another clickbait title. You people never learn, do you.',
-  },
-  {
-    label: 'Hostile',
-    text: 'You are an absolute idiot and everyone in the comments agrees you should be ashamed.',
-  },
-  {
-    label: 'Hostile',
-    text: 'Nobody wants to hear from a loser like you, just delete your channel already.',
-  },
-];
-
 type Status = 'idle' | 'loading' | 'success' | 'error';
-
-function BarRow({
-  label,
-  score,
-  percentage,
-  pastel,
-  ink,
-  isWinner,
-  reduceMotion,
-}: {
-  label: string;
-  score: number;
-  percentage: string;
-  pastel: string;
-  ink: string;
-  isWinner: boolean;
-  reduceMotion: boolean;
-}) {
-  const widthPercent = Math.min(100, Math.max(0, score * 100));
-
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-3">
-        <span
-          className="body-sm"
-          style={{ color: ink, fontWeight: isWinner ? 600 : 400 }}
-        >
-          {label}
-        </span>
-        <span className="caption text-muted" style={{ color: isWinner ? ink : undefined }}>
-          {percentage}
-        </span>
-      </div>
-      <div
-        className="h-2.5 w-full overflow-hidden rounded-[var(--radius-pill)]"
-        style={{ background: 'var(--color-surface-strong)' }}
-      >
-        <motion.div
-          className="h-full rounded-[var(--radius-pill)]"
-          style={{ background: pastel }}
-          initial={{ width: reduceMotion ? `${widthPercent}%` : 0 }}
-          animate={{ width: `${widthPercent}%` }}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
-          }
-        />
-      </div>
-    </div>
-  );
-}
 
 export interface PlaygroundProps {
   className?: string;
@@ -112,7 +23,7 @@ export function Playground({ className }: PlaygroundProps) {
 
   const [text, setText] = useState('');
   const [status, setStatus] = useState<Status>('idle');
-  const [result, setResult] = useState<SingleTextResult | null>(null);
+  const [result, setResult] = useState<TextAnalysisResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -204,7 +115,10 @@ export function Playground({ className }: PlaygroundProps) {
   const isOverLimit = charCount > MAX_CHARS;
   const isLoading = status === 'loading';
 
-  const winnerMeta = result ? LABEL_META[result.mostLikelyCategory] : null;
+  // A result already on screen stays on screen while the next one loads, dimmed
+  // rather than replaced — swapping it for a skeleton on every keystroke pause
+  // makes the panel flicker and loses the reader's place.
+  const showResult = result !== null && (status === 'success' || isLoading);
 
   return (
     <div className={className}>
@@ -220,7 +134,7 @@ export function Playground({ className }: PlaygroundProps) {
               value={text}
               onChange={(event) => setText(event.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type or paste a comment to see how the model scores it…"
+              placeholder="Type or paste a comment in any supported language — English, Hindi, Marathi, or romanised Hinglish…"
               rows={8}
               aria-describedby={`${textareaId}-count ${textareaId}-note`}
               aria-invalid={isOverLimit ? true : undefined}
@@ -261,10 +175,11 @@ export function Playground({ className }: PlaygroundProps) {
                   key={prompt.text}
                   type="button"
                   onClick={() => handleExampleClick(prompt)}
-                  className="caption inline-flex min-h-[36px] items-center rounded-[var(--radius-pill)] border border-hairline-strong bg-surface-card px-3 py-1.5 text-body transition-colors hover:border-[var(--color-ink)] hover:text-ink"
+                  className="caption inline-flex min-h-[36px] items-center rounded-[var(--radius-pill)] border border-hairline-strong bg-surface-card px-3 py-1.5 text-body transition-colors hover:border-[var(--color-ink)] hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2"
                   title={prompt.text}
                 >
                   {prompt.label}
+                  <span className="sr-only"> — {prompt.hint}</span>
                 </button>
               ))}
             </div>
@@ -287,8 +202,10 @@ export function Playground({ className }: PlaygroundProps) {
               <p className="display-sm max-w-[22ch] text-muted">
                 Start typing to see how ToxiScan reads it.
               </p>
-              <p className="body-sm mt-3 max-w-[36ch] text-muted">
-                Results appear here automatically, a moment after you stop typing.
+              <p className="body-sm mt-3 max-w-[38ch] text-muted">
+                You will get a category, a severity level, the language it was
+                detected in and which model scored it — a moment after you stop
+                typing.
               </p>
             </div>
           ) : null}
@@ -296,16 +213,18 @@ export function Playground({ className }: PlaygroundProps) {
           {isLoading && !result ? (
             <div className="flex flex-1 flex-col gap-6">
               <Skeleton className="h-9 w-2/3" />
-              <div className="flex flex-col gap-4">
-                {LABEL_ORDER.map((label) => (
-                  <Skeleton key={label} className="h-8 w-full" />
-                ))}
-              </div>
+              <Skeleton className="h-5 w-1/2" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-5 w-1/3" />
             </div>
           ) : null}
 
           {status === 'error' ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+            <div
+              role="alert"
+              className="flex flex-1 flex-col items-center justify-center gap-4 text-center"
+            >
               <p
                 className="body-md max-w-[40ch]"
                 style={{ color: 'var(--color-semantic-error)' }}
@@ -318,40 +237,12 @@ export function Playground({ className }: PlaygroundProps) {
             </div>
           ) : null}
 
-          {status === 'success' && result && winnerMeta ? (
-            <div className="flex flex-1 flex-col gap-8">
-              <div>
-                <span className="caption-uppercase text-muted">Most likely</span>
-                <p
-                  className="display-md mt-2"
-                  style={{ color: winnerMeta.ink, opacity: isLoading ? 0.5 : 1 }}
-                >
-                  {winnerMeta.display}
-                </p>
-                <p className="body-sm mt-2 text-body">{winnerMeta.description}</p>
-              </div>
-
-              <div className="flex flex-col gap-4" style={{ opacity: isLoading ? 0.5 : 1 }}>
-                {LABEL_ORDER.map((label) => {
-                  const meta = LABEL_META[label];
-                  const prediction = result.predictions.find((p) => p.label === label);
-                  const score = prediction?.score ?? 0;
-                  const percentage = prediction?.percentage ?? formatScore(0);
-                  return (
-                    <BarRow
-                      key={label}
-                      label={meta.display}
-                      score={score}
-                      percentage={percentage}
-                      pastel={meta.pastel}
-                      ink={meta.ink}
-                      isWinner={label === result.mostLikelyCategory}
-                      reduceMotion={reduceMotion}
-                    />
-                  );
-                })}
-              </div>
-            </div>
+          {showResult && result ? (
+            <ResultPanel
+              result={result}
+              isStale={isLoading}
+              reduceMotion={reduceMotion}
+            />
           ) : null}
         </div>
       </div>

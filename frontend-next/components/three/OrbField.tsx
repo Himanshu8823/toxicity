@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /** The five atmospheric gradient tokens from globals.css, as linear RGB. */
@@ -20,6 +20,8 @@ interface OrbDefinition {
   driftSpeed: number;
   driftPhase: number;
   driftRadius: number;
+  /** Extra opacity multiplier for the soft core. Halo orbs get a low value. */
+  intensity: number;
 }
 
 export interface OrbFieldProps {
@@ -27,6 +29,12 @@ export interface OrbFieldProps {
   static?: boolean;
   /** Number of orbs in the field. Defaults to 5 (one per gradient token). */
   count?: number;
+  /**
+   * Scroll progress in [0, 1] used to drive the camera Z. 0 = resting,
+   * 1 = fully pushed back. `OrbField` reads this via `useEffect` and
+   * applies it inside `useFrame` so the motion stays one rAF deep.
+   */
+  scrollProgress?: number;
 }
 
 function buildOrbs(count: number): OrbDefinition[] {
@@ -46,6 +54,7 @@ function buildOrbs(count: number): OrbDefinition[] {
       driftSpeed: 0.08 + (i % 4) * 0.015,
       driftPhase: angle,
       driftRadius: 0.5 + (i % 3) * 0.18,
+      intensity: 1,
     });
   }
   return orbs;
@@ -97,7 +106,7 @@ function Orb({
 
     if (animate) {
       const pulse = 1 + Math.sin(t * def.driftSpeed * 2 + def.driftPhase) * 0.04;
-      group.scale.setScalar(pulse);
+      group.scale.setScalar(pulse * def.intensity);
     }
   });
 
@@ -109,7 +118,7 @@ function Orb({
         <meshBasicMaterial
           color={color}
           transparent
-          opacity={0.14}
+          opacity={0.14 * def.intensity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -120,7 +129,7 @@ function Orb({
         <meshBasicMaterial
           color={color}
           transparent
-          opacity={0.22}
+          opacity={0.22 * def.intensity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -132,7 +141,7 @@ function Orb({
         <meshBasicMaterial
           color={color}
           transparent
-          opacity={0.3}
+          opacity={0.3 * def.intensity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -148,14 +157,33 @@ function Orb({
  * motion, additive-transparent shells standing in for frosted-glass
  * diffusion rather than crisp geometry.
  *
+ * Two visual upgrades versus the v1:
+ *  1. A single, larger, dimmer "halo" orb sits behind the regular 5. It
+ *     uses the lavender token (the brand's most neutral pastel) and
+ *     drifts at ~30% speed. Reads as atmospheric perspective.
+ *  2. Camera Z is driven by `scrollProgress` so the field subtly recedes
+ *     as the user scrolls past the hero — depth illusion.
+ *
  * When `static` is true (reduced-motion or a paused/off-screen canvas),
  * orbs render at their resting pose and `useFrame` becomes a no-op beyond
  * pointer response, so this same tree can serve both the animated and
  * static-frame paths that `Scene.tsx` chooses between.
  */
-export function OrbField({ static: isStatic = false, count = 5 }: OrbFieldProps) {
+export function OrbField({
+  static: isStatic = false,
+  count = 5,
+  scrollProgress = 0,
+}: OrbFieldProps) {
   const orbs = useMemo(() => buildOrbs(count), [count]);
   const pointer = useRef<[number, number]>([0, 0]);
+  const { camera } = useThree();
+  const baseZ = useRef(camera.position.z);
+
+  // Cache the resting camera Z the first time we render so the scroll
+  // animation is relative to wherever the camera was placed by `Scene`.
+  useEffect(() => {
+    baseZ.current = camera.position.z;
+  }, [camera]);
 
   useFrame((state) => {
     if (isStatic) return;
@@ -163,10 +191,28 @@ export function OrbField({ static: isStatic = false, count = 5 }: OrbFieldProps)
     // a ref so pointer movement never triggers a React re-render.
     pointer.current[0] += (state.pointer.x - pointer.current[0]) * 0.04;
     pointer.current[1] += (state.pointer.y - pointer.current[1]) * 0.04;
+
+    // Drive the camera Z from scroll progress. As the user scrolls past
+    // the hero, the field recedes by ~1.6 units — gentle, but enough to
+    // sell depth.
+    const targetZ = baseZ.current + scrollProgress * 1.6;
+    camera.position.z += (targetZ - camera.position.z) * 0.06;
   });
+
+  // Halo orb: positioned deep behind the main field, larger, dimmer.
+  const halo: OrbDefinition = {
+    color: ORB_COLORS[2], // lavender
+    basePosition: [0, 0, -4.5],
+    radius: 3.6,
+    driftSpeed: 0.025,
+    driftPhase: 0,
+    driftRadius: 0.6,
+    intensity: 0.45,
+  };
 
   return (
     <group>
+      <Orb def={halo} index={99} animate={!isStatic} pointer={pointer} />
       {orbs.map((def, i) => (
         <Orb key={i} def={def} index={i} animate={!isStatic} pointer={pointer} />
       ))}

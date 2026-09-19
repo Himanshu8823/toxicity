@@ -28,6 +28,12 @@ export interface SceneProps {
   fallbackGradient?: string;
   /** Purely decorative — hides the whole mount from assistive tech. */
   ariaHidden?: boolean;
+  /**
+   * Scroll progress in [0, 1] forwarded to children that accept it
+   * (currently just `OrbField`'s `scrollProgress`). Lets the page drive
+   * depth-of-field / camera-Z moves from outside the canvas.
+   */
+  scrollProgress?: number;
 }
 
 const DEFAULT_FALLBACK_GRADIENT =
@@ -56,6 +62,7 @@ export function Scene({
   frameloop = 'always',
   fallbackGradient = DEFAULT_FALLBACK_GRADIENT,
   ariaHidden = true,
+  scrollProgress = 0,
 }: SceneProps) {
   const reducedMotion = useReducedMotion();
   const capability = useDeviceCapability();
@@ -64,7 +71,10 @@ export function Scene({
   const effectiveFrameloop: SceneCanvasProps['frameloop'] = staticFrame ? 'demand' : frameloop;
 
   const content = isValidElement(children)
-    ? cloneElement(children as ReactElement<{ static?: boolean }>, { static: staticFrame })
+    ? cloneElement(children as ReactElement<{ static?: boolean; scrollProgress?: number }>, {
+        static: staticFrame,
+        scrollProgress,
+      })
     : children;
 
   // While capability detection is running, and once it resolves to "low",

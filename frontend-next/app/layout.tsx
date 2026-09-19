@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { EB_Garamond, Inter } from 'next/font/google';
 import './globals.css';
+import { SmoothScrollProvider } from '@/components/motion/SmoothScrollProvider';
 
 /**
  * Waldenburg Light is licensed; DESIGN.md names EB Garamond at 300 as the
@@ -25,7 +26,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'ToxiScan — Read the room before you read the comments',
   description:
-    'Analyse the comment section of any public YouTube video. ToxiScan scores every comment for insults, obscenity, threats and dangerous content, then shows you the shape of the conversation.',
+    'Analyse the comment section of any public YouTube video. ToxiScan scores every comment and reply across nine categories and five levels of severity, then shows you the shape of the conversation.',
   keywords: [
     'YouTube comments',
     'toxicity analysis',
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'ToxiScan — YouTube comment toxicity analysis',
     description:
-      'Score any public YouTube comment section for insults, obscenity, threats and dangerous content.',
+      'Score any public YouTube comment section across nine categories and five levels of severity.',
     type: 'website',
   },
 };
@@ -52,7 +53,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${ebGaramond.variable} ${inter.variable}`}>
-      <body className="bg-canvas text-body antialiased">{children}</body>
+      <body className="bg-canvas text-body antialiased">
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+      </body>
     </html>
   );
 }

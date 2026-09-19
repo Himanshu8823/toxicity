@@ -1,7 +1,13 @@
 import { CANONICAL_LABELS, HARMFUL_LABELS, type ToxicityLabel } from './types';
 
 /**
- * Presentation metadata for the five toxicity states.
+ * Presentation metadata for the legacy five toxicity states.
+ *
+ * These are no longer the taxonomy — `lib/analysis/taxonomy.ts` holds the
+ * current nine categories and five severity levels, and is the source of truth.
+ * What lives here is the projection of those nine onto the older five, kept so
+ * the components that still read `LABEL_META` keep rendering while they migrate.
+ * Change the taxonomy there, not here.
  *
  * Colour note: ElevenLabs has no saturated alert palette, so severity is
  * carried by the five atmospheric gradient tokens rather than red/green.
@@ -67,9 +73,9 @@ export const LABEL_META: Record<ToxicityLabel, LabelMeta> = {
 export const LABEL_ORDER: readonly ToxicityLabel[] = CANONICAL_LABELS;
 
 /**
- * Coerces any server or legacy label string into a canonical label.
- * Mirrors `normalizeLabel()` in `backend/server.js`; unknown values fall
- * back to `dangerous` so nothing harmful is silently shown as clean.
+ * Coerces any server or legacy label string into one of the legacy five.
+ * Unknown values fall back to `dangerous` so nothing harmful is silently
+ * shown as clean. The nine-category mapping lives in `lib/analysis/taxonomy.ts`.
  */
 export function normalizeLabel(raw: string | undefined | null): ToxicityLabel {
   const key = String(raw ?? '').toLowerCase().replace(/[\s-]+/g, '_');

@@ -1,0 +1,332 @@
+- generic [ref=f57e1]:
+  - banner [ref=f57e2]:
+    - generic [ref=f57e3]:
+      - link "ToxiScan home" [ref=f57e4]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Primary" [ref=f57e5]:
+        - link "Analyse" [ref=f57e6]:
+          - /url: /#analyse-form
+        - link "Playground" [ref=f57e7]:
+          - /url: /playground
+        - link "About" [ref=f57e8]:
+          - /url: /about
+      - link "Sign in" [ref=f57e9]:
+        - /url: /login
+  - main [ref=f57e10]:
+    - generic [ref=f57e17]:
+      - generic [ref=f57e18]:
+        - generic [ref=f57e19]: ToxiScan
+        - heading "Read the room before you read the comments." [level=1] [ref=f57e22]:
+          - generic [ref=f57e23]:
+            - generic [aria-hidden] [ref=f57e24]: R
+            - generic [aria-hidden] [ref=f57e25]: e
+            - generic [aria-hidden] [ref=f57e26]: a
+            - generic [aria-hidden] [ref=f57e27]: d
+          - generic [ref=f57e28]:
+            - generic [aria-hidden] [ref=f57e29]: t
+            - generic [aria-hidden] [ref=f57e30]: h
+            - generic [aria-hidden] [ref=f57e31]: e
+          - generic [ref=f57e32]:
+            - generic [aria-hidden] [ref=f57e33]: r
+            - generic [aria-hidden] [ref=f57e34]: o
+            - generic [aria-hidden] [ref=f57e35]: o
+            - generic [aria-hidden] [ref=f57e36]: m
+          - generic [ref=f57e37]:
+            - generic [aria-hidden] [ref=f57e38]: b
+            - generic [aria-hidden] [ref=f57e39]: e
+            - generic [aria-hidden] [ref=f57e40]: f
+            - generic [aria-hidden] [ref=f57e41]: o
+            - generic [aria-hidden] [ref=f57e42]: r
+            - generic [aria-hidden] [ref=f57e43]: e
+          - generic [ref=f57e44]:
+            - generic [aria-hidden] [ref=f57e45]: "y"
+            - generic [aria-hidden] [ref=f57e46]: o
+            - generic [aria-hidden] [ref=f57e47]: u
+          - generic [ref=f57e48]:
+            - generic [aria-hidden] [ref=f57e49]: r
+            - generic [aria-hidden] [ref=f57e50]: e
+            - generic [aria-hidden] [ref=f57e51]: a
+            - generic [aria-hidden] [ref=f57e52]: d
+          - generic [ref=f57e53]:
+            - generic [aria-hidden] [ref=f57e54]: t
+            - generic [aria-hidden] [ref=f57e55]: h
+            - generic [aria-hidden] [ref=f57e56]: e
+          - generic [ref=f57e57]:
+            - generic [aria-hidden] [ref=f57e58]: c
+            - generic [aria-hidden] [ref=f57e59]: o
+            - generic [aria-hidden] [ref=f57e60]: m
+            - generic [aria-hidden] [ref=f57e61]: m
+            - generic [aria-hidden] [ref=f57e62]: e
+            - generic [aria-hidden] [ref=f57e63]: "n"
+            - generic [aria-hidden] [ref=f57e64]: t
+            - generic [aria-hidden] [ref=f57e65]: s
+            - generic [aria-hidden] [ref=f57e66]: .
+        - paragraph [ref=f57e68]: ToxiScan scores every comment and reply on a public YouTube video across nine categories and five levels of severity, then shows you the shape of the conversation — before you scroll through it yourself.
+      - generic [ref=f57e71]:
+        - generic [ref=f57e72]:
+          - generic [ref=f57e73]: YouTube video URL
+          - textbox "YouTube video URL" [invalid] [ref=f57e74]:
+            - /placeholder: https://www.youtube.com/watch?v=…
+          - paragraph [ref=f57e671]: Paste a YouTube video URL to begin.
+        - generic [ref=f57e76]:
+          - generic [ref=f57e77]:
+            - generic [ref=f57e78]: Comments to analyse
+            - generic [aria-hidden] [ref=f57e79]: "50"
+          - slider "Comments to analyse" [ref=f57e80]: "50"
+          - generic [ref=f57e81]:
+            - generic [ref=f57e82]: "10"
+            - generic [ref=f57e83]: 200 max
+        - button "Analyse comments" [active] [ref=f57e85]
+        - paragraph [ref=f57e88]: Public videos only. Scans are saved to your account so you can come back to them.
+    - generic [ref=f57e89]:
+      - paragraph [ref=f57e91]: Built for the people who read comment sections
+      - generic [ref=f57e94]:
+        - generic [ref=f57e95]: Creators
+        - generic [ref=f57e101]: Community moderators
+        - generic [ref=f57e106]: Trust & safety teams
+        - generic [ref=f57e112]: Educators
+        - generic [ref=f57e118]: Researchers
+        - generic [ref=f57e123]: Brand managers
+        - generic [ref=f57e129]: Agencies
+        - generic [ref=f57e140]: Creators
+        - generic [ref=f57e145]: Community moderators
+        - generic [ref=f57e151]: Trust & safety teams
+        - generic [ref=f57e157]: Educators
+        - generic [ref=f57e162]: Researchers
+        - generic [ref=f57e168]: Brand managers
+        - generic [ref=f57e174]: Agencies
+    - generic [ref=f57e177]:
+      - generic [ref=f57e182]:
+        - generic [ref=f57e183]:
+          - generic [ref=f57e184]: Chapter 01
+          - heading "Paste a link" [level=3] [ref=f57e185]
+          - paragraph [ref=f57e186]: Drop in the URL of any public YouTube video with comments enabled. Sign in first — the scan is saved to your account. No channel access needed.
+        - img [ref=f57e194]:
+          - generic [ref=f57e197]: https://www.youtube.com/watch?v=…
+          - generic [ref=f57e202]: Channel · Video
+      - generic [ref=f57e207]:
+        - generic [ref=f57e208]:
+          - generic [ref=f57e209]: Chapter 02
+          - heading "Fetch the comments" [level=3] [ref=f57e210]
+          - paragraph [ref=f57e211]: ToxiScan calls the YouTube Data API v3 and pulls up to two hundred comments — replies included, so a reply can be read against what it replies to.
+        - img [ref=f57e219]:
+          - generic [ref=f57e222]: YouTube API
+          - generic [ref=f57e223]: v3 · comments.list
+      - generic [ref=f57e251]:
+        - generic [ref=f57e252]:
+          - generic [ref=f57e253]: Chapter 03
+          - heading "Score each one" [level=3] [ref=f57e254]
+          - paragraph [ref=f57e255]: "Each comment is routed by language: a MuRIL model for Hindi, Marathi and code-mixed text, an XLM-RoBERTa model for English and European languages."
+        - img [ref=f57e263]:
+          - generic [ref=f57e265]: "0.12"
+          - generic [ref=f57e271]: "0.28"
+          - generic [ref=f57e277]: "0.44"
+          - generic [ref=f57e283]: "0.60"
+          - generic [ref=f57e289]: "0.76"
+          - generic [ref=f57e295]: "0.92"
+      - generic [ref=f57e305]:
+        - generic [ref=f57e306]:
+          - generic [ref=f57e307]: Chapter 04
+          - heading "Catch what scores miss" [level=3] [ref=f57e308]
+          - paragraph [ref=f57e309]: A language model reads each comment again for sarcasm, for harm that only exists in context, and to place it on a five-level severity scale.
+        - img [ref=f57e317]:
+          - generic [ref=f57e319]: 42%
+          - generic [ref=f57e327]:
+            - generic [ref=f57e328]:
+              - generic [ref=f57e329]: Safe
+              - generic [ref=f57e332]: 55%
+            - generic [ref=f57e333]:
+              - generic [ref=f57e334]: Insult
+              - generic [ref=f57e337]: 30%
+            - generic [ref=f57e338]:
+              - generic [ref=f57e339]: Obscene
+              - generic [ref=f57e342]: 40%
+            - generic [ref=f57e343]:
+              - generic [ref=f57e344]: Threat
+              - generic [ref=f57e347]: 65%
+            - generic [ref=f57e348]:
+              - generic [ref=f57e349]: Dangerous
+              - generic [ref=f57e352]: 50%
+      - generic [ref=f57e357]:
+        - generic [ref=f57e358]:
+          - generic [ref=f57e359]: Chapter 05
+          - heading "Read the result" [level=3] [ref=f57e360]
+          - paragraph [ref=f57e361]: An overall score, a breakdown across nine categories, and the comments driving each one. Save it, export it, or flag anything the model got wrong.
+        - img [ref=f57e369]:
+          - generic [ref=f57e372]: OVERALL TOXICITY
+          - generic [ref=f57e373]: "0.34"
+          - generic [ref=f57e374]: Confidence 78% · 200 comments analysed
+          - generic [ref=f57e375]:
+            - generic [ref=f57e376]: Safe
+            - generic [ref=f57e380]: Insult
+            - generic [ref=f57e384]: Obscene
+            - generic [ref=f57e388]: Threat
+            - generic [ref=f57e392]: Dangerous
+    - generic [ref=f57e398]:
+      - paragraph [ref=f57e399]: The categories
+      - heading "Nine categories, grouped into five families here." [level=2] [ref=f57e400]
+      - paragraph [ref=f57e401]: Severity is never carried by a loud red banner — it is carried by language. Here is what each family means and how it is weighted.
+    - generic [ref=f57e405]:
+      - article [ref=f57e406]:
+        - generic [ref=f57e408]:
+          - generic [ref=f57e409]: "01"
+          - heading "Non-toxic" [level=3] [ref=f57e410]
+          - paragraph [ref=f57e411]: No insults, obscenity or threatening intent detected.
+          - generic [ref=f57e412]: Clean
+      - article [ref=f57e413]:
+        - generic [ref=f57e415]:
+          - generic [ref=f57e416]: "02"
+          - heading "Insult" [level=3] [ref=f57e417]
+          - paragraph [ref=f57e418]: Hostile or disrespectful language aimed at a person or group.
+          - generic [ref=f57e419]: Harmful
+      - article [ref=f57e420]:
+        - generic [ref=f57e422]:
+          - generic [ref=f57e423]: "03"
+          - heading "Obscenity" [level=3] [ref=f57e424]
+          - paragraph [ref=f57e425]: Profanity or sexually explicit language.
+          - generic [ref=f57e426]: Harmful
+      - article [ref=f57e427]:
+        - generic [ref=f57e429]:
+          - generic [ref=f57e430]: "04"
+          - heading "Threat" [level=3] [ref=f57e431]
+          - paragraph [ref=f57e432]: Language expressing intent to harm.
+          - generic [ref=f57e433]: Harmful
+      - article [ref=f57e434]:
+        - generic [ref=f57e436]:
+          - generic [ref=f57e437]: "05"
+          - heading "Dangerous" [level=3] [ref=f57e438]
+          - paragraph [ref=f57e439]: Content that may damage reputation or encourage harm.
+          - generic [ref=f57e440]: Harmful
+    - generic [ref=f57e442]:
+      - generic [ref=f57e443]:
+        - paragraph [ref=f57e444]: Capabilities
+        - heading "What is actually happening under the hood." [level=2] [ref=f57e445]
+      - generic [ref=f57e446]:
+        - generic [ref=f57e450]:
+          - heading "English, Hindi and Marathi" [level=3] [ref=f57e451]
+          - paragraph [ref=f57e452]: Including romanised, code-mixed comments — the "bhai yeh kya hai" register that generic toxicity models read as English and score as harmless.
+        - generic [ref=f57e456]:
+          - heading "Sarcasm and context" [level=3] [ref=f57e457]
+          - paragraph [ref=f57e458]: "\"Wow, you're really a genius 🙄\" carries no abusive word. Neither does a reply that is only cruel because of what it is replying to. Both are caught."
+        - generic [ref=f57e462]:
+          - heading "Nine categories, five severities" [level=3] [ref=f57e463]
+          - paragraph [ref=f57e464]: Insult, harassment, hate speech, threat, profanity, sexual content, identity attack and self-harm — each graded from mild through to critical.
+        - generic [ref=f57e468]:
+          - heading "It shows its working" [level=3] [ref=f57e469]
+          - paragraph [ref=f57e470]: Every verdict carries its confidence, which model produced it, and where the two models disagreed. Flag anything wrong and it is measured against the next run.
+    - generic [ref=f57e472]:
+      - generic [ref=f57e473]:
+        - paragraph [ref=f57e474]: Reviews
+        - heading "What people use it for." [level=2] [ref=f57e475]
+        - paragraph [ref=f57e476]: Creators, moderators and researchers reading the same comment sections you are.
+      - generic [ref=f57e479]:
+        - generic [ref=f57e480]:
+          - article [ref=f57e483]:
+            - paragraph [ref=f57e487]: I used to skim the first twenty comments and guess. Now I can see the shape of the whole thread before I decide whether to open it at all.
+            - generic [ref=f57e488]:
+              - generic [aria-hidden] [ref=f57e489]: P
+              - generic [ref=f57e490]:
+                - generic [ref=f57e491]: Priya Raghavan
+                - generic [ref=f57e492]: Creator · 480k subscribers
+          - article [ref=f57e495]:
+            - paragraph [ref=f57e499]: We screen videos before featuring them in class. Ten seconds here saves a scroll through four hundred comments.
+            - generic [ref=f57e500]:
+              - generic [aria-hidden] [ref=f57e501]: T
+              - generic [ref=f57e502]:
+                - generic [ref=f57e503]: Tomás Herrera
+                - generic [ref=f57e504]: Secondary school educator
+        - generic [ref=f57e505]:
+          - article [ref=f57e508]:
+            - paragraph [ref=f57e512]: The breakdown by category is what sold me. "Toxic" on its own is useless — knowing it is mostly obscenity and not threats changes how I respond.
+            - generic [ref=f57e513]:
+              - generic [aria-hidden] [ref=f57e514]: M
+              - generic [ref=f57e515]:
+                - generic [ref=f57e516]: Marcus Whitfield
+                - generic [ref=f57e517]: Community moderator
+          - article [ref=f57e520]:
+            - paragraph [ref=f57e524]: Plain about its limits — two hundred at a time, and it says where it is least sure. I would rather have a tool that tells me what it cannot see.
+            - generic [ref=f57e525]:
+              - generic [aria-hidden] [ref=f57e526]: S
+              - generic [ref=f57e527]:
+                - generic [ref=f57e528]: Sarah Okonkwo
+                - generic [ref=f57e529]: Trust & safety lead
+        - generic [ref=f57e530]:
+          - article [ref=f57e533]:
+            - paragraph [ref=f57e537]: It shows the confidence score next to every label instead of hiding it. That honesty is the reason I trust the rest of the report.
+            - generic [ref=f57e538]:
+              - generic [aria-hidden] [ref=f57e539]: D
+              - generic [ref=f57e540]:
+                - generic [ref=f57e541]: Dr. Anneke Vos
+                - generic [ref=f57e542]: Researcher, online harm
+          - article [ref=f57e545]:
+            - paragraph [ref=f57e549]: The one report I can actually forward to a client without translating it first. It reads like a person wrote it.
+            - generic [ref=f57e550]:
+              - generic [aria-hidden] [ref=f57e551]: D
+              - generic [ref=f57e552]:
+                - generic [ref=f57e553]: Daniel Brecht
+                - generic [ref=f57e554]: Agency brand lead
+    - generic [ref=f57e556]:
+      - generic [ref=f57e557]:
+        - paragraph [ref=f57e558]: Questions
+        - heading "Before you paste a link." [level=2] [ref=f57e559]
+      - generic [ref=f57e561]:
+        - heading [level=3] [ref=f57e563]:
+          - button "How accurate is the scoring?" [ref=f57e564]
+        - heading [level=3] [ref=f57e570]:
+          - button "Do I need an account?" [ref=f57e571]
+        - heading [level=3] [ref=f57e577]:
+          - button "Can I analyse a private video or a live stream?" [ref=f57e578]
+        - heading [level=3] [ref=f57e584]:
+          - button "What is the maximum number of comments?" [ref=f57e585]
+        - heading [level=3] [ref=f57e591]:
+          - button "How long does an analysis take?" [ref=f57e592]
+        - heading [level=3] [ref=f57e598]:
+          - button "Do you store the comments or the results?" [ref=f57e599]
+        - heading [level=3] [ref=f57e605]:
+          - button "What if the model gets a comment wrong?" [ref=f57e606]
+        - heading [level=3] [ref=f57e612]:
+          - button "Can I export the results?" [ref=f57e613]
+    - generic [ref=f57e620]:
+      - heading "See what a comment section is actually saying." [level=2] [ref=f57e622]
+      - link "Analyse a video" [ref=f57e626]:
+        - /url: "#analyse-form"
+  - contentinfo [ref=f57e632]:
+    - generic [ref=f57e633]:
+      - generic [ref=f57e634]:
+        - generic [ref=f57e635]:
+          - text: ToxiScan
+          - paragraph [ref=f57e636]: Read the room before you read the comments.
+        - generic [ref=f57e637]:
+          - paragraph [ref=f57e638]: Product
+          - list [ref=f57e639]:
+            - listitem [ref=f57e640]:
+              - link "Analyse a video" [ref=f57e641]:
+                - /url: /#analyse-form
+            - listitem [ref=f57e642]:
+              - link "Playground" [ref=f57e643]:
+                - /url: /playground
+            - listitem [ref=f57e644]:
+              - link "About" [ref=f57e645]:
+                - /url: /about
+        - generic [ref=f57e646]:
+          - paragraph [ref=f57e647]: Labels
+          - list [ref=f57e648]:
+            - listitem [ref=f57e649]:
+              - link "How scoring works" [ref=f57e650]:
+                - /url: /about#labels
+            - listitem [ref=f57e651]:
+              - link "Data & privacy" [ref=f57e652]:
+                - /url: /about#privacy
+        - generic [ref=f57e653]:
+          - paragraph [ref=f57e654]: Resources
+          - list [ref=f57e655]:
+            - listitem [ref=f57e656]:
+              - link "YouTube Data API" [ref=f57e657]:
+                - /url: https://developers.google.com/youtube/v3
+            - listitem [ref=f57e658]:
+              - link "FAQ" [ref=f57e659]:
+                - /url: /about#faq
+      - paragraph [ref=f57e661]: © 2026 ToxiScan. Not affiliated with YouTube or Google.
+  - button "Open Next.js Dev Tools" [ref=f57e667] [cursor=pointer]
+  - alert [ref=f57e672]

@@ -1,0 +1,29 @@
+- generic [active] [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - banner [ref=f15e3]:
+      - link "ToxiScan" [ref=f15e5]:
+        - /url: /
+    - main [ref=f15e6]:
+      - generic [ref=f15e7]:
+        - paragraph [ref=f15e8]: Restricted
+        - heading "Administrator access" [level=1] [ref=f15e9]
+        - paragraph [ref=f15e10]: Credentials are verified against the administrator role. Every sign-in attempt on this surface is recorded.
+        - generic [ref=f15e11]:
+          - generic [ref=f15e12]:
+            - generic [ref=f15e13]: Email
+            - textbox "Email" [ref=f15e14]:
+              - /placeholder: admin@toxiscan.app
+              - text: user-b@neha-project.com
+          - generic [ref=f15e15]:
+            - generic [ref=f15e16]: Password
+            - textbox "Password" [ref=f15e17]:
+              - /placeholder: ••••••••
+              - text: password123
+          - alert [ref=f15e32]: This account does not have administrator access.
+          - button "Authenticate" [ref=f15e33]
+        - paragraph [ref=f15e19]:
+          - text: Not an administrator?
+          - link "Standard sign-in" [ref=f15e20]:
+            - /url: /login
+  - button "Open Next.js Dev Tools" [ref=f15e26] [cursor=pointer]
+  - alert [ref=f15e30]

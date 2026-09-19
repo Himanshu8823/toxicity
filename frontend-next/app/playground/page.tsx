@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Nav } from '@/components/ui/Nav';
+import { SiteNav } from '@/components/ui/SiteNav';
 import { Footer } from '@/components/ui/Footer';
 import { Section } from '@/components/ui/Section';
 import { Scene } from '@/components/three/Scene';
@@ -9,13 +9,13 @@ import { Playground } from '@/components/playground/Playground';
 export const metadata: Metadata = {
   title: 'Playground — ToxiScan',
   description:
-    'Type any sentence and see ToxiScan score it live for insults, obscenity, threats and dangerous content — a direct, tactile look at the model behind the analysis.',
+    'Type any sentence and see ToxiScan score it live across nine categories and five levels of severity — a direct, tactile look at the models behind the analysis.',
 };
 
 export default function PlaygroundPage() {
   return (
     <>
-      <Nav />
+      <SiteNav />
       <main>
         {/* ---------------------------------------------------------- */}
         {/* Hero                                                       */}
@@ -38,9 +38,9 @@ export default function PlaygroundPage() {
               className="body-md fade-rise mt-6 max-w-[54ch] text-body"
               style={{ animationDelay: '0.1s' }}
             >
-              This is the same RuBERT-based toxicity model that scores every comment on
-              a full video analysis — here it is stripped down to a single text box, so
-              you can see exactly how it reads a sentence.
+              These are the same models that score every comment on a full video
+              analysis — here they are stripped down to a single text box, so you can
+              see exactly how a sentence is read. No sign-in needed.
             </p>
           </div>
         </section>
@@ -64,11 +64,12 @@ export default function PlaygroundPage() {
               A probability, not a verdict.
             </h2>
             <p className="body-md mt-4 text-body">
-              The model behind this playground is a RuBERT-derived classifier. It is
-              strong on the languages and phrasing patterns it was trained on, and less
-              certain outside them — sarcasm, slang, and non-English text can all shift
-              its confidence. Treat every result here as a probability worth reading
-              carefully, not an automatic judgement of the person who wrote it.
+              Your text is routed by the language detected in it: MuRIL for Indic and
+              code-mixed writing, XLM-RoBERTa for English and European languages, with a
+              language model reading it again for sarcasm and severity. Each is stronger
+              on the phrasing it was trained on and less certain outside it. Treat every
+              result here as a probability worth reading carefully, not an automatic
+              judgement of the person who wrote it.
             </p>
           </div>
         </Section>

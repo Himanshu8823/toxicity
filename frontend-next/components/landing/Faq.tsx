@@ -12,7 +12,12 @@ const FAQ_ENTRIES: FaqEntry[] = [
   {
     question: 'How accurate is the scoring?',
     answer:
-      'Each comment is scored by a RuBERT-based multilingual toxicity model hosted on Hugging Face. It performs well across the languages and domains it was trained on, but accuracy varies with dialect, slang and context — we would rather be honest about that than quote a single number that will not hold everywhere.',
+      'Each comment goes to one of two classifiers depending on its language — indic-abusive-allInOne-MuRIL for Indic and code-mixed text, multilingual-toxic-xlm-roberta for English and European languages — and then to Llama 3.3 70B for sarcasm, context and severity. Accuracy is strongest on English and weakest where MuRIL only says abusive or not and the language model fills in the rest. We would rather be honest about that than quote a single number that will not hold everywhere.',
+  },
+  {
+    question: 'Do I need an account?',
+    answer:
+      'To analyse a video, yes — the scan is saved to your account so you have a history, can keep analyses with notes and tags, and can export reports later. The playground, where you score your own text one piece or a batch at a time, works without signing in.',
   },
   {
     question: 'Can I analyse a private video or a live stream?',
@@ -22,22 +27,27 @@ const FAQ_ENTRIES: FaqEntry[] = [
   {
     question: 'What is the maximum number of comments?',
     answer:
-      'Two hundred per request. That is the cap on both ends — the form will not let you ask for more, and the backend enforces the same limit.',
+      'Two hundred per scan, replies included. That is the cap on both ends — the form will not let you ask for more, and the server enforces the same limit.',
   },
   {
     question: 'How long does an analysis take?',
     answer:
-      'Typically ten to sixty seconds. Comments are scored in small batches, so the exact time depends on how many comments you request and how the model host is responding in that moment — occasionally a few minutes for the full two hundred.',
+      'Typically ten to sixty seconds. Comments are scored in small batches and then read a second time by the language model, so the exact time depends on how many you request and how the two hosts are responding in that moment — occasionally a few minutes for the full two hundred.',
   },
   {
     question: 'Do you store the comments or the results?',
     answer:
-      'No. Each analysis is a per-request round trip — comments are fetched, scored and returned to your browser. Nothing is written to a database and nothing is shared with a third party beyond the model host doing the scoring.',
+      'Video scans are saved to your account: the comments, their scores and the report. They are visible to you and nobody else, and you can delete a scan whenever you want. Playground text is scored and returned without being kept.',
+  },
+  {
+    question: 'What if the model gets a comment wrong?',
+    answer:
+      'Flag it. Every comment in a report can be marked as wrongly labelled, with the label you think is right. Accepted flags become ground truth, which is what precision, recall and F1 are measured against — so the corrections are not just filed away.',
   },
   {
     question: 'Can I export the results?',
     answer:
-      'Yes. From the results page you can download the full analysis as JSON or as a CSV, ready for a spreadsheet or a closer look elsewhere.',
+      'Yes. From a saved analysis you can download the full report as CSV for a spreadsheet, as JSON to build on, or as a print-ready page your browser can save to PDF.',
   },
 ];
 

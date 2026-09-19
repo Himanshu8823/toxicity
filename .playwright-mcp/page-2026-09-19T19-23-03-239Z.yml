@@ -1,0 +1,81 @@
+- generic [active] [ref=f44e1]:
+  - generic [ref=f44e2]:
+    - generic [ref=f44e3]:
+      - link "ToxiScan home" [ref=f44e5]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f44e6]:
+        - list [ref=f44e7]:
+          - listitem [ref=f44e8]:
+            - link "Analyse" [ref=f44e9]:
+              - /url: /dashboard/analyse
+          - listitem [ref=f44e12]:
+            - link "Overview" [ref=f44e13]:
+              - /url: /dashboard
+          - listitem [ref=f44e16]:
+            - link "History" [ref=f44e17]:
+              - /url: /dashboard/history
+          - listitem [ref=f44e20]:
+            - link "Saved" [ref=f44e21]:
+              - /url: /dashboard/saved
+          - listitem [ref=f44e24]:
+            - link "Reports" [ref=f44e25]:
+              - /url: /dashboard/reports
+          - listitem [ref=f44e28]:
+            - link "Settings" [ref=f44e29]:
+              - /url: /dashboard/settings
+      - generic [ref=f44e32]:
+        - generic [ref=f44e33]:
+          - generic [ref=f44e35]: U
+          - generic [ref=f44e36]:
+            - generic [ref=f44e37]: user-a
+            - generic [ref=f44e38]: user-a@neha-project.com
+        - button "Sign out" [ref=f44e39]
+    - main [ref=f44e41]:
+      - generic [aria-hidden] [ref=f44e42]:
+        - status [ref=f44e43]
+        - status [ref=f44e45]
+        - status [ref=f44e47]
+      - generic [aria-hidden] [ref=f44e49]:
+        - status [ref=f44e50]
+        - status [ref=f44e52]
+        - status [ref=f44e54]
+        - status [ref=f44e56]
+        - status [ref=f44e58]
+        - status [ref=f44e60]
+      - status [ref=f44e63]
+      - generic [aria-hidden] [ref=f44e65]:
+        - status [ref=f44e66]
+        - status [ref=f44e68]
+      - generic [ref=f44e70]:
+        - status [aria-hidden] [ref=f44e71]
+        - generic [aria-hidden] [ref=f44e74]:
+          - generic [ref=f44e76]:
+            - status [ref=f44e77]
+            - generic [ref=f44e79]:
+              - status [ref=f44e80]
+              - status [ref=f44e82]
+              - generic [ref=f44e84]:
+                - status [ref=f44e85]
+                - status [ref=f44e87]
+                - status [ref=f44e89]
+          - generic [ref=f44e92]:
+            - status [ref=f44e93]
+            - generic [ref=f44e95]:
+              - status [ref=f44e96]
+              - status [ref=f44e98]
+              - generic [ref=f44e100]:
+                - status [ref=f44e101]
+                - status [ref=f44e103]
+                - status [ref=f44e105]
+          - generic [ref=f44e108]:
+            - status [ref=f44e109]
+            - generic [ref=f44e111]:
+              - status [ref=f44e112]
+              - status [ref=f44e114]
+              - generic [ref=f44e116]:
+                - status [ref=f44e117]
+                - status [ref=f44e119]
+                - status [ref=f44e121]
+  - button "Open Next.js Dev Tools" [ref=f44e128] [cursor=pointer]
+  - alert [ref=f44e132]

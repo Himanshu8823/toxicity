@@ -1,0 +1,30 @@
+- generic [active] [ref=f57e1]:
+  - button "Open Next.js Dev Tools" [ref=f57e667] [cursor=pointer]
+  - alert [ref=f57e672]
+  - generic [ref=f57e673]:
+    - banner [ref=f57e674]:
+      - link "ToxiScan home" [ref=f57e676]:
+        - /url: /
+        - text: ToxiScan
+    - main [ref=f57e677]:
+      - generic [ref=f57e679]:
+        - paragraph [ref=f57e680]: Welcome back
+        - heading "Sign in" [level=1] [ref=f57e681]
+        - paragraph [ref=f57e682]: Pick up where you left off — your scans and reports are waiting.
+        - generic [ref=f57e683]:
+          - generic [ref=f57e684]:
+            - generic [ref=f57e685]: Email
+            - textbox "Email" [ref=f57e686]:
+              - /placeholder: you@example.com
+          - generic [ref=f57e687]:
+            - generic [ref=f57e688]:
+              - generic [ref=f57e689]: Password
+              - textbox "Password" [ref=f57e690]:
+                - /placeholder: ••••••••
+            - link "Forgot your password?" [ref=f57e691]:
+              - /url: /forgot-password
+          - button "Sign in" [ref=f57e692]
+        - paragraph [ref=f57e694]:
+          - text: New to ToxiScan?
+          - link "Create an account" [ref=f57e695]:
+            - /url: /register

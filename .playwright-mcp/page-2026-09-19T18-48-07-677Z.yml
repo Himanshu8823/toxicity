@@ -1,0 +1,45 @@
+- generic [active] [ref=f17e1]:
+  - button "Open Next.js Dev Tools" [ref=f17e30] [cursor=pointer]
+  - alert [ref=f17e34]
+  - generic [ref=f17e35]:
+    - generic [ref=f17e36]:
+      - link "ToxiScan home" [ref=f17e38]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f17e39]:
+        - list [ref=f17e40]:
+          - listitem [ref=f17e41]:
+            - link "Overview" [ref=f17e42]:
+              - /url: /dashboard
+          - listitem [ref=f17e45]:
+            - link "History" [ref=f17e46]:
+              - /url: /dashboard/history
+          - listitem [ref=f17e49]:
+            - link "Saved" [ref=f17e50]:
+              - /url: /dashboard/saved
+          - listitem [ref=f17e53]:
+            - link "Reports" [ref=f17e54]:
+              - /url: /dashboard/reports
+          - listitem [ref=f17e57]:
+            - link "Settings" [ref=f17e58]:
+              - /url: /dashboard/settings
+      - generic [ref=f17e61]:
+        - generic [ref=f17e62]:
+          - generic [ref=f17e64]: U
+          - generic [ref=f17e65]:
+            - generic [ref=f17e66]: user-a
+            - generic [ref=f17e67]: user-a@neha-project.com
+        - button "Sign out" [ref=f17e68]
+    - main [ref=f17e70]:
+      - generic [ref=f17e71]:
+        - paragraph [ref=f17e72]: Overview
+        - heading "Welcome, user-a" [level=1] [ref=f17e73]
+      - generic [ref=f17e75]:
+        - heading "Your first comment section is one URL away" [level=2] [ref=f17e76]
+        - paragraph [ref=f17e77]: Paste a link to any public YouTube video and ToxiScan will read its comments — scoring each one across nine categories, in thirteen languages, and telling you which verdicts it is least sure about.
+        - generic [ref=f17e78]:
+          - link "Analyse a video" [ref=f17e79]:
+            - /url: /#analyse-form
+          - link "Try the playground" [ref=f17e80]:
+            - /url: /playground
+        - paragraph [ref=f17e82]: Nothing is analysed until you ask for it, and every scan stays on your account alone.

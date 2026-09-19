@@ -1,0 +1,60 @@
+- generic [active] [ref=f49e1]:
+  - button "Open Next.js Dev Tools" [ref=f49e667] [cursor=pointer]
+  - alert [ref=f49e671]
+  - generic [ref=f49e707]:
+    - generic [ref=f49e708]:
+      - link "ToxiScan home" [ref=f49e710]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f49e711]:
+        - list [ref=f49e712]:
+          - listitem [ref=f49e713]:
+            - link "Analyse" [ref=f49e714]:
+              - /url: /dashboard/analyse
+          - listitem [ref=f49e717]:
+            - link "Overview" [ref=f49e718]:
+              - /url: /dashboard
+          - listitem [ref=f49e721]:
+            - link "History" [ref=f49e722]:
+              - /url: /dashboard/history
+          - listitem [ref=f49e725]:
+            - link "Saved" [ref=f49e726]:
+              - /url: /dashboard/saved
+          - listitem [ref=f49e729]:
+            - link "Reports" [ref=f49e730]:
+              - /url: /dashboard/reports
+          - listitem [ref=f49e733]:
+            - link "Settings" [ref=f49e734]:
+              - /url: /dashboard/settings
+      - generic [ref=f49e737]:
+        - generic [ref=f49e738]:
+          - generic [ref=f49e740]: U
+          - generic [ref=f49e741]:
+            - generic [ref=f49e742]: user-a
+            - generic [ref=f49e743]: user-a@neha-project.com
+        - button "Sign out" [ref=f49e744]
+    - main [ref=f49e746]:
+      - generic [ref=f49e747]:
+        - generic [ref=f49e748]:
+          - paragraph [ref=f49e749]: Analyse
+          - heading "Run a new scan" [level=1] [ref=f49e750]
+          - paragraph [ref=f49e751]: Paste a link to any public YouTube video with comments enabled. The scan is saved to your account so you can come back to it from History.
+        - generic [ref=f49e753]:
+          - generic [ref=f49e754]:
+            - generic [ref=f49e755]: YouTube video URL
+            - textbox "YouTube video URL" [disabled] [ref=f49e756]:
+              - /placeholder: https://www.youtube.com/watch?v=…
+              - text: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+            - paragraph [ref=f49e757]: Restored from where you started — confirm and analyse.
+          - generic [ref=f49e758]:
+            - generic [ref=f49e759]:
+              - generic [ref=f49e760]: Comments to analyse
+              - generic [aria-hidden] [ref=f49e761]: "75"
+            - slider "Comments to analyse" [disabled] [ref=f49e762]: "75"
+            - generic [ref=f49e763]:
+              - generic [ref=f49e764]: "10"
+              - generic [ref=f49e765]: 200 max
+          - generic [ref=f49e766]:
+            - button "Analysing…" [disabled] [ref=f49e771]
+            - button "Cancel" [ref=f49e775]
+          - paragraph [ref=f49e770]: Scoring comments… 16s elapsed — larger comment counts can take up to a few minutes.

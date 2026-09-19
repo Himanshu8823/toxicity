@@ -1,0 +1,129 @@
+- generic [ref=f36e1]:
+  - banner [ref=f36e2]:
+    - generic [ref=f36e3]:
+      - link "ToxiScan home" [ref=f36e4]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Primary" [ref=f36e5]:
+        - link "Analyse" [ref=f36e6]:
+          - /url: /#analyse-form
+        - link "Playground" [ref=f36e7]:
+          - /url: /playground
+        - link "About" [ref=f36e10]:
+          - /url: /about
+      - link "Sign in" [ref=f36e11]:
+        - /url: /login
+  - main [ref=f36e12]:
+    - generic [ref=f36e17]:
+      - text: Playground
+      - heading "See the model think, one sentence at a time." [level=1] [ref=f36e18]
+      - paragraph [ref=f36e19]: These are the same models that score every comment on a full video analysis — here they are stripped down to a single text box, so you can see exactly how a sentence is read. No sign-in needed.
+    - generic [ref=f36e24]:
+      - generic [ref=f36e25]:
+        - generic [ref=f36e26]:
+          - generic [ref=f36e27]: Try a sentence
+          - textbox "Try a sentence" [active] [ref=f36e28]:
+            - /placeholder: Type or paste a comment in any supported language — English, Hindi, Marathi, or romanised Hinglish…
+            - text: ok
+          - paragraph [ref=f36e30]: 2 / 1000 characters
+        - generic [ref=f36e31]:
+          - button "Analyse now" [ref=f36e32]
+          - generic [ref=f36e34]: or press ⌘/Ctrl + Enter
+        - generic [ref=f36e35]:
+          - generic [ref=f36e36]: Try an example
+          - generic [ref=f36e37]:
+            - button "English · neutral — Routed to XLM-RoBERTa" [ref=f36e38]:
+              - text: English · neutral
+              - generic [ref=f36e39]: — Routed to XLM-RoBERTa
+            - button "English · hostile — Plain insult, routed to XLM-RoBERTa" [ref=f36e40]:
+              - text: English · hostile
+              - generic [ref=f36e41]: — Plain insult, routed to XLM-RoBERTa
+            - button "Sarcasm — No abusive word in it — a keyword filter passes this" [ref=f36e42]:
+              - text: Sarcasm
+              - generic [ref=f36e43]: — No abusive word in it — a keyword filter passes this
+            - button "हिन्दी · Devanagari — Devanagari script, routed to MuRIL" [ref=f36e44]:
+              - text: हिन्दी · Devanagari
+              - generic [ref=f36e45]: — Devanagari script, routed to MuRIL
+            - button "Hinglish · romanised — Latin script, Hindi words — the case generic detectors miss" [ref=f36e46]:
+              - text: Hinglish · romanised
+              - generic [ref=f36e47]: — Latin script, Hindi words — the case generic detectors miss
+            - button "Mixed script — Devanagari and Latin in one comment" [ref=f36e48]:
+              - text: Mixed script
+              - generic [ref=f36e49]: — Devanagari and Latin in one comment
+        - paragraph [ref=f36e50]: Results are probabilistic model scores, not a moderation verdict — accuracy varies by language and context. This tool informs; it does not judge people.
+      - generic [ref=f36e100]:
+        - generic [ref=f36e101]:
+          - text: Verdict
+          - paragraph [ref=f36e102]: Non-toxic
+          - paragraph [ref=f36e103]: No insults, obscenity or threatening intent detected.
+          - generic [ref=f36e104]:
+            - generic "No insults, obscenity or threatening intent detected." [ref=f36e155]: Non-toxic
+            - generic "Nothing harmful detected." [ref=f36e156]:
+              - text: None
+              - generic [ref=f36e113]: — severity 0 of 4
+            - generic [ref=f36e114]: 99.8% confidence
+        - generic [ref=f36e115]:
+          - generic [ref=f36e116]:
+            - generic [ref=f36e117]: Severity
+            - generic [ref=f36e118]: None · 0 of 4
+          - paragraph [ref=f36e125]: Severity None, level 0 of 4.
+          - paragraph [ref=f36e126]: Nothing harmful detected.
+        - generic [ref=f36e127]:
+          - generic [ref=f36e128]:
+            - generic [ref=f36e129]: Detected language
+            - generic [ref=f36e130]:
+              - generic [aria-hidden] [ref=f36e132]: English
+              - generic [ref=f36e133]: 30.0% confidence
+          - generic [ref=f36e135]:
+            - generic [ref=f36e136]: Scored by
+            - generic [ref=f36e137]: unitary/multilingual-toxic-xlm-roberta
+        - generic [ref=f36e138]:
+          - generic [ref=f36e139]: Why
+          - paragraph [ref=f36e140]: The comment is a neutral affirmation with no harmful content.
+        - group [ref=f36e142]:
+          - generic "Model scores (1)" [ref=f36e154] [cursor=pointer]:
+            - text: Model scores (1)
+            - generic [aria-hidden] [ref=f36e144]: +
+    - generic [ref=f36e57]:
+      - text: Worth knowing
+      - heading "A probability, not a verdict." [level=2] [ref=f36e58]
+      - paragraph [ref=f36e59]: "Your text is routed by the language detected in it: MuRIL for Indic and code-mixed writing, XLM-RoBERTa for English and European languages, with a language model reading it again for sarcasm and severity. Each is stronger on the phrasing it was trained on and less certain outside it. Treat every result here as a probability worth reading carefully, not an automatic judgement of the person who wrote it."
+  - contentinfo [ref=f36e60]:
+    - generic [ref=f36e61]:
+      - generic [ref=f36e62]:
+        - generic [ref=f36e63]:
+          - text: ToxiScan
+          - paragraph [ref=f36e64]: Read the room before you read the comments.
+        - generic [ref=f36e65]:
+          - paragraph [ref=f36e66]: Product
+          - list [ref=f36e67]:
+            - listitem [ref=f36e68]:
+              - link "Analyse a video" [ref=f36e69]:
+                - /url: /#analyse-form
+            - listitem [ref=f36e70]:
+              - link "Playground" [ref=f36e71]:
+                - /url: /playground
+            - listitem [ref=f36e72]:
+              - link "About" [ref=f36e73]:
+                - /url: /about
+        - generic [ref=f36e74]:
+          - paragraph [ref=f36e75]: Labels
+          - list [ref=f36e76]:
+            - listitem [ref=f36e77]:
+              - link "How scoring works" [ref=f36e78]:
+                - /url: /about#labels
+            - listitem [ref=f36e79]:
+              - link "Data & privacy" [ref=f36e80]:
+                - /url: /about#privacy
+        - generic [ref=f36e81]:
+          - paragraph [ref=f36e82]: Resources
+          - list [ref=f36e83]:
+            - listitem [ref=f36e84]:
+              - link "YouTube Data API" [ref=f36e85]:
+                - /url: https://developers.google.com/youtube/v3
+            - listitem [ref=f36e86]:
+              - link "FAQ" [ref=f36e87]:
+                - /url: /about#faq
+      - paragraph [ref=f36e89]: © 2026 ToxiScan. Not affiliated with YouTube or Google.
+  - button "Open Next.js Dev Tools" [ref=f36e95] [cursor=pointer]
+  - alert [ref=f36e99]

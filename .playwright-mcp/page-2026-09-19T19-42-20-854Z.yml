@@ -1,0 +1,38 @@
+- generic [active] [ref=f66e1]:
+  - generic [ref=f66e2]:
+    - banner [ref=f66e3]:
+      - link "ToxiScan home" [ref=f66e5]:
+        - /url: /
+        - text: ToxiScan
+    - main [ref=f66e6]:
+      - generic [ref=f66e8]:
+        - paragraph [ref=f66e9]: Welcome back
+        - heading "Sign in" [level=1] [ref=f66e10]
+        - paragraph [ref=f66e11]: Pick up where you left off — your scans and reports are waiting.
+        - generic [ref=f66e12]:
+          - generic [ref=f66e13]:
+            - generic [ref=f66e14]: Email
+            - textbox "Email" [ref=f66e15]:
+              - /placeholder: you@example.com
+              - text: user-a@neha-project.com
+          - generic [ref=f66e16]:
+            - generic [ref=f66e17]:
+              - generic [ref=f66e18]: Password
+              - textbox "Password" [ref=f66e19]:
+                - /placeholder: ••••••••
+                - text: password123
+            - link "Forgot your password?" [ref=f66e20]:
+              - /url: /forgot-password
+          - button "Signing in" [disabled] [ref=f66e35]
+        - paragraph [ref=f66e23]:
+          - text: New to ToxiScan?
+          - link "Create an account" [ref=f66e24]:
+            - /url: /register
+  - button "Open Next.js Dev Tools" [ref=f66e39] [cursor=pointer]:
+    - generic [ref=f66e42]:
+      - text: Rendering
+      - generic [ref=f66e43]:
+        - generic [ref=f66e44]: .
+        - generic [ref=f66e45]: .
+        - generic [ref=f66e46]: .
+  - alert [ref=f66e34]

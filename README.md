@@ -1,140 +1,174 @@
-# 🔬 ToxiScan — YouTube Comment Toxicity Analyzer
+# ToxiScan
 
-Paste a YouTube link and get an instant AI-powered toxicity analysis of comments using the **cointegrated/rubert-tiny-toxicity** HuggingFace model.
+Paste a YouTube link and read the shape of its comment section: what was said,
+in which language, how harmful it is, and how confident the models are about
+any of that.
+
+Built as a final-year project. The parts that make it more than a wrapper
+around one model are the multilingual routing, the sarcasm and context passes,
+and the evaluation surface that measures the whole thing against human
+judgement.
 
 ---
 
-## 🗂 Project Structure
+## What it does
+
+- **Analyses a video's comments**, replies included, up to 200 per scan.
+- **Works in English, Hindi and Marathi**, plus code-mixed "Hinglish", and
+  falls back sensibly on Spanish, French, Portuguese, Italian, Turkish and
+  Russian.
+- **Nine categories, five severity levels** — not a toxic/not-toxic flag.
+- **Catches sarcasm and context**: "Wow, you're really a genius 🙄" contains no
+  abusive word, and a reply can be harmless alone and hostile as a response.
+- **Measures itself.** Users flag wrong predictions, an admin reviews them, and
+  the accepted ones become ground truth for precision, recall, F1 and a
+  confusion matrix per model per language.
+
+---
+
+## Architecture
+
+One Next.js application. The Express backend that used to live in `backend/`
+has been migrated into Route Handlers; it is kept in the repository for
+reference but is no longer run.
 
 ```
-youtube-toxicity/
-├── backend/         # Node.js + Express API
-│   ├── server.js
-│   ├── package.json
-│   └── .env.example
-└── frontend/        # React app
-    ├── src/
-    │   ├── App.js
-    │   ├── pages/LandingPage.js
-    │   ├── pages/ResultsPage.js
-    │   └── index.js
-    └── package.json
+frontend-next/
+├── app/
+│   ├── (auth)/              login, register, password reset
+│   ├── admin/               admin console — separate shell, seeded access
+│   ├── api/
+│   │   ├── analyze/         video, text, batch
+│   │   ├── scans/           history, detail, save
+│   │   ├── reports/         generate and download
+│   │   ├── feedback/        human-in-the-loop
+│   │   └── admin/           privileged operations
+│   ├── dashboard/           the signed-in user area
+│   └── …                    landing, about, playground
+├── lib/
+│   ├── analysis/
+│   │   ├── language.ts      detection and classifier routing
+│   │   ├── classifiers/     MuRIL (Indic), XLM-R (European)
+│   │   ├── groq.ts          sarcasm, context, severity
+│   │   ├── severity.ts      banding and override rules
+│   │   ├── taxonomy.ts      categories, legacy five-label view
+│   │   └── pipeline.ts      detect → classify → enrich → merge
+│   ├── youtube/             Data API v3
+│   ├── db/                  Drizzle schema, migrations, queries
+│   ├── auth/                session guards
+│   ├── metrics/             precision, recall, F1, ROC-AUC
+│   └── reports/             CSV, JSON, print-ready HTML
+├── proxy.ts                 session refresh and route guards
+└── scripts/                 migrate, seed
 ```
 
+### Why two classifiers
+
+There is no single free model that covers the required languages well.
+
+| Model | Languages | Labels |
+|---|---|---|
+| `unitary/multilingual-toxic-xlm-roberta` | en, fr, es, it, pt, tr, ru | 7 categories |
+| `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL` | hi, mr, bn, ta, te, ur, en, code-mixed | binary |
+
+The XLM-R model card is explicit that it should only be tested on its seven
+languages — it has never seen Hindi or Marathi. MuRIL has, but can only say
+"abusive or not". So each comment is routed by detected language, and Groq
+supplies what the chosen model cannot express: the category for Indic text,
+and sarcasm, context and severity for everything.
+
+That the two sometimes disagree is recorded rather than hidden —
+`comment_analyses.models_disagree` — and the disagreement rate is reported per
+language in the admin console.
+
 ---
 
-## ⚙️ Setup
+## Setup
 
-### 1. Get API Keys
+Short version below. **[SETUP.md](SETUP.md) has the step-by-step**, including
+where to click in each console and what to do when something fails.
 
-**Hugging Face Token:**
-1. Go to [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
-2. Create a new token (Read access is enough)
+### 1. Accounts and keys
 
-**YouTube Data API v3 Key:**
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a project → Enable **YouTube Data API v3**
-3. Create credentials → API Key
+All free, no card required.
 
----
+| Service | Where | Used for |
+|---|---|---|
+| Supabase | [supabase.com](https://supabase.com) → new project | auth, database, report storage |
+| Hugging Face | [settings/tokens](https://huggingface.co/settings/tokens) | both classifiers |
+| Groq | [console.groq.com/keys](https://console.groq.com/keys) | sarcasm, context, severity |
+| YouTube Data API v3 | [Google Cloud Console](https://console.cloud.google.com/) | fetching comments |
 
-### 2. Backend Setup
+### 2. Configure
 
 ```bash
-cd backend
+cd frontend-next
+cp .env.example .env.local
+```
+
+Fill in `.env.local`. Every variable is documented in the example file. For
+`DATABASE_URL` use Supabase's **transaction pooler** string (port 6543), not
+the direct connection.
+
+### 3. Install, migrate, seed
+
+```bash
 npm install
-cp .env.example .env
+npm run db:migrate    # schema, RLS policies, auth trigger, storage bucket
+npm run db:seed       # creates the admin account from ADMIN_SEED_*
 ```
 
-Edit `.env`:
-```
-HF_TOKEN=hf_your_huggingface_token
-YOUTUBE_API_KEY=your_google_api_key
-PORT=5000
-```
+### 4. Check and run
 
-Start the server:
 ```bash
-npm start
-# or for development:
+npm run check   # verifies keys, schema, RLS, storage, and both classifiers
 npm run dev
 ```
 
-Server runs at: `http://localhost:5000`
+`npm run check` is worth running first, and worth running again whenever
+something stops working — it reports what is wrong and what to do about it.
+
+- App — http://localhost:3000
+- Admin — http://localhost:3000/admin/login
 
 ---
 
-### 3. Frontend Setup
+## Scripts
 
-```bash
-cd frontend
-npm install
-npm start
-```
-
-App runs at: `http://localhost:3000`
-
-> The `"proxy": "http://localhost:5000"` in `frontend/package.json` routes API calls automatically.
-
----
-
-## 🚀 Usage
-
-1. Open `http://localhost:3000`
-2. Paste any YouTube URL (watch, shorts, youtu.be)
-3. Choose how many comments to analyze (10–200)
-4. Click **Analyze Now**
-5. View:
-   - **Overview** — KPIs, category breakdown, most toxic comments
-   - **Charts** — Pie chart, radial gauge, bar charts
-   - **Comments** — All comments with toxicity labels + filter/search
+| Command | Does |
+|---|---|
+| `npm run dev` | development server |
+| `npm run check` | verify configuration, schema and external services |
+| `npm run build` | production build |
+| `npm run typecheck` | TypeScript, no emit |
+| `npm run db:generate` | generate a migration from schema changes |
+| `npm run db:migrate` | apply pending migrations |
+| `npm run db:seed` | create or repair the admin account |
+| `npm run db:studio` | browse the database |
 
 ---
 
-## 📡 API Endpoints
+## Roles
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/analyze-video` | Main endpoint — fetches YouTube comments and analyzes toxicity |
-| POST | `/analyze-toxicity` | Single text analysis |
-| POST | `/analyze-toxicity-batch` | Batch text analysis |
+**User** — analyse videos, keep a history, save analyses with notes and tags,
+generate reports, and flag predictions that look wrong.
 
-### Example: `/analyze-video`
-```json
-// Request
-{
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "maxComments": 50
-}
-
-// Response
-{
-  "videoInfo": { "title": "...", "channelName": "...", ... },
-  "analysis": {
-    "totalAnalyzed": 50,
-    "overallToxicityScore": "24.0",
-    "toxicCount": 12,
-    "nonToxicCount": 38,
-    "labelStats": [...],
-    "mostToxicComments": [...],
-    "allResults": [...]
-  }
-}
-```
+**Admin** — everything under `/admin`, on its own shell with its own login.
+There is no admin registration: accounts are created by `npm run db:seed`.
+Admins see platform totals, every user and scan, the feedback review queue, the
+evaluation metrics, model routing statistics, and an audit log of every
+privileged action.
 
 ---
 
-## 🧠 Model
+## Limitations
 
-**Model:** `cointegrated/rubert-tiny-toxicity`  
-**Source:** HuggingFace  
-**Labels:** `non_toxic`, `toxic`, `insult`, `threat`, `obscene`, `identity_hate`, `severe_toxic`
+Stated plainly, because a tool like this is only useful if its limits are.
 
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** React 18, Recharts, Framer Motion, Axios
-- **Backend:** Node.js, Express, dotenv, cors
-- **AI:** HuggingFace Inference API
-- **Data:** YouTube Data API v3
+- Every score is a model's confidence, not a fact.
+- Up to 200 comments per scan. On a busy video that is a sample, not a census.
+- Hindi and Marathi detection leans on a binary classifier plus a language
+  model. It works, but it is not as well-grounded as the English path.
+- Sarcasm detection is genuinely hard and will miss cases in both directions.
+- Only public videos with comments enabled can be analysed.
+- ToxiScan does not moderate, report or act on YouTube. It reads.

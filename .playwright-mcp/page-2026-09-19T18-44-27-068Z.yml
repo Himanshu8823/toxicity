@@ -1,0 +1,16 @@
+- generic [active] [ref=f10e1]:
+  - generic [ref=f10e2]:
+    - banner [ref=f10e3]:
+      - link "ToxiScan home" [ref=f10e5]:
+        - /url: /
+        - text: ToxiScan
+    - main [ref=f10e6]:
+      - generic [ref=f10e8]:
+        - paragraph [ref=f10e9]: Request received
+        - heading "Check your inbox" [level=1] [ref=f10e31]
+        - paragraph [ref=f10e11]: If an account exists for that address, a reset link is on its way.
+        - paragraph [ref=f10e32]: The link expires after a short while — request another if it lapses.
+        - link "Back to sign in" [ref=f10e33]:
+          - /url: /login
+  - button "Open Next.js Dev Tools" [ref=f10e25] [cursor=pointer]
+  - alert [ref=f10e29]

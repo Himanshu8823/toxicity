@@ -1,0 +1,45 @@
+- generic [active] [ref=f30e1]:
+  - generic [ref=f30e2]:
+    - generic [ref=f30e3]:
+      - link "ToxiScan home" [ref=f30e5]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f30e6]:
+        - list [ref=f30e7]:
+          - listitem [ref=f30e8]:
+            - link "Overview" [ref=f30e9]:
+              - /url: /dashboard
+          - listitem [ref=f30e12]:
+            - link "History" [ref=f30e13]:
+              - /url: /dashboard/history
+          - listitem [ref=f30e16]:
+            - link "Saved" [ref=f30e17]:
+              - /url: /dashboard/saved
+          - listitem [ref=f30e20]:
+            - link "Reports" [ref=f30e21]:
+              - /url: /dashboard/reports
+          - listitem [ref=f30e24]:
+            - link "Settings" [ref=f30e25]:
+              - /url: /dashboard/settings
+      - generic [ref=f30e28]:
+        - generic [ref=f30e29]:
+          - generic [ref=f30e31]: T
+          - generic [ref=f30e32]:
+            - generic [ref=f30e33]: ToxiScan Admin
+            - generic [ref=f30e34]: admin@toxiscan.test
+        - button "Sign out" [ref=f30e35]
+    - main [ref=f30e37]:
+      - generic [ref=f30e38]:
+        - paragraph [ref=f30e39]: Overview
+        - heading "Welcome, ToxiScan" [level=1] [ref=f30e40]
+      - generic [ref=f30e42]:
+        - heading "Your first comment section is one URL away" [level=2] [ref=f30e43]
+        - paragraph [ref=f30e44]: Paste a link to any public YouTube video and ToxiScan will read its comments — scoring each one across nine categories, in thirteen languages, and telling you which verdicts it is least sure about.
+        - generic [ref=f30e45]:
+          - link "Analyse a video" [ref=f30e46]:
+            - /url: /#analyse-form
+          - link "Try the playground" [ref=f30e47]:
+            - /url: /playground
+        - paragraph [ref=f30e49]: Nothing is analysed until you ask for it, and every scan stays on your account alone.
+  - button "Open Next.js Dev Tools" [ref=f30e55] [cursor=pointer]
+  - alert [ref=f30e59]

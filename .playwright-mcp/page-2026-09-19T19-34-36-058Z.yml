@@ -1,0 +1,57 @@
+- generic [active] [ref=f54e1]:
+  - generic [ref=f54e2]:
+    - generic [ref=f54e3]:
+      - link "ToxiScan home" [ref=f54e5]:
+        - /url: /
+        - text: ToxiScan
+      - navigation "Dashboard" [ref=f54e6]:
+        - list [ref=f54e7]:
+          - listitem [ref=f54e8]:
+            - link "Analyse" [ref=f54e9]:
+              - /url: /dashboard/analyse
+          - listitem [ref=f54e12]:
+            - link "Overview" [ref=f54e13]:
+              - /url: /dashboard
+          - listitem [ref=f54e16]:
+            - link "History" [ref=f54e17]:
+              - /url: /dashboard/history
+          - listitem [ref=f54e20]:
+            - link "Saved" [ref=f54e21]:
+              - /url: /dashboard/saved
+          - listitem [ref=f54e24]:
+            - link "Reports" [ref=f54e25]:
+              - /url: /dashboard/reports
+          - listitem [ref=f54e28]:
+            - link "Settings" [ref=f54e29]:
+              - /url: /dashboard/settings
+      - generic [ref=f54e32]:
+        - generic [ref=f54e33]:
+          - generic [ref=f54e35]: U
+          - generic [ref=f54e36]:
+            - generic [ref=f54e37]: user-a
+            - generic [ref=f54e38]: user-a@neha-project.com
+        - button "Sign out" [ref=f54e39]
+    - main [ref=f54e41]:
+      - generic [ref=f54e42]:
+        - generic [ref=f54e43]:
+          - paragraph [ref=f54e44]: Analyse
+          - heading "Run a new scan" [level=1] [ref=f54e45]
+          - paragraph [ref=f54e46]: Paste a link to any public YouTube video with comments enabled. The scan is saved to your account so you can come back to it from History.
+        - generic [ref=f54e48]:
+          - generic [ref=f54e49]:
+            - generic [ref=f54e50]: YouTube video URL
+            - textbox "YouTube video URL" [ref=f54e51]:
+              - /placeholder: https://www.youtube.com/watch?v=…
+            - paragraph [ref=f54e52]: Paste the link to any public video with comments enabled.
+          - generic [ref=f54e53]:
+            - generic [ref=f54e54]:
+              - generic [ref=f54e55]: Comments to analyse
+              - generic [aria-hidden] [ref=f54e56]: "50"
+            - slider "Comments to analyse" [ref=f54e57]: "50"
+            - generic [ref=f54e58]:
+              - generic [ref=f54e59]: "10"
+              - generic [ref=f54e60]: 200 max
+          - button "Analyse comments" [ref=f54e62]
+          - paragraph [ref=f54e65]: Public videos only. Scans are saved to your account so you can come back to them.
+  - button "Open Next.js Dev Tools" [ref=f54e71] [cursor=pointer]
+  - alert [ref=f54e75]
