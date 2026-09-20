@@ -24,6 +24,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/analyse', label: 'Analyse', icon: 'M21 21l-4.3-4.3M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z' },
   { href: '/dashboard', label: 'Overview', icon: 'M3 12h7V3H3v9Zm11 9h7v-9h-7v9ZM3 21h7v-5H3v5Zm11-12h7V3h-7v6Z' },
+  { href: '/dashboard/text-analysis', label: 'Text analysis', icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z' },
   { href: '/dashboard/history', label: 'History', icon: 'M12 8v5l3 2M3 12a9 9 0 1 0 2.6-6.4M3 4v4h4' },
   { href: '/dashboard/saved', label: 'Saved', icon: 'M6 3h12v18l-6-4.5L6 21V3Z' },
   { href: '/dashboard/reports', label: 'Reports', icon: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Zm0 0v5h5M9 13h6M9 17h6' },
