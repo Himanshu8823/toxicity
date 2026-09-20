@@ -13,9 +13,7 @@
     "db:seed": "npm run db:seed --prefix frontend-next",
     "db:setup": "npm run db:setup --prefix frontend-next",
     "db:studio": "npm run db:studio --prefix frontend-next",
-    "check": "npm run check --prefix frontend-next",
-    "legacy:backend": "npm start --prefix backend",
-    "legacy:frontend": "npm start --prefix frontend"
+    "check": "npm run check --prefix frontend-next"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
