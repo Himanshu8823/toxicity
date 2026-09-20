@@ -10,7 +10,6 @@ import { analyzeText, toApiMessage } from '@/lib/api';
 import type { TextAnalysisResponse } from '@/lib/types';
 
 const MAX_CHARS = 1000;
-const DEBOUNCE_MS = 700;
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -27,7 +26,6 @@ export function Playground({ className }: PlaygroundProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
 
   const runAnalysis = useCallback(async (value: string) => {
@@ -61,37 +59,14 @@ export function Playground({ className }: PlaygroundProps) {
     }
   }, []);
 
-  // Debounced live analysis — fires ~700ms after typing stops.
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    if (!text.trim()) {
-      abortRef.current?.abort();
-      setStatus('idle');
-      setResult(null);
-      setErrorMessage(null);
-      return;
-    }
-
-    debounceRef.current = setTimeout(() => {
-      void runAnalysis(text);
-    }, DEBOUNCE_MS);
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [text, runAnalysis]);
-
-  // Clean up any in-flight request and pending debounce on unmount.
+  // Clean up any in-flight request on unmount.
   useEffect(() => {
     return () => {
       abortRef.current?.abort();
-      if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
 
   function handleSubmitNow() {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
     void runAnalysis(text);
   }
 
@@ -200,12 +175,11 @@ export function Playground({ className }: PlaygroundProps) {
           {status === 'idle' ? (
             <div className="flex flex-1 flex-col items-center justify-center text-center">
               <p className="display-sm max-w-[22ch] text-muted">
-                Start typing to see how ToxiScan reads it.
+                Click Analyse to see how ToxiScan reads it.
               </p>
               <p className="body-sm mt-3 max-w-[38ch] text-muted">
                 You will get a category, a severity level, the language it was
-                detected in and which model scored it — a moment after you stop
-                typing.
+                detected in and which model scored it.
               </p>
             </div>
           ) : null}

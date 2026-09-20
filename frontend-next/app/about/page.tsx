@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { ClientNav } from '@/components/ui/ClientNav';
 import { Footer } from '@/components/ui/Footer';
 import { Section } from '@/components/ui/Section';
-import { PipelineStep } from '@/components/about/PipelineStep';
-import { LabelCard } from '@/components/about/LabelCard';
 import { LimitationItem } from '@/components/about/LimitationItem';
-import { LABEL_META, LABEL_ORDER } from '@/lib/labels';
+import { LabelGallery } from '@/components/landing/LabelGallery';
 import {
   Reveal,
   Parallax,
@@ -17,18 +15,20 @@ import {
   MagneticButton,
   Aurora,
   CardSpotlight,
-  ScrollLockSection,
+  HorizontalScroll,
 } from '@/components/motion';
+import { StepCard, type PipelineStepCard } from '@/components/landing/StepCard';
 import { Inline3D } from '@/components/three/Inline3D';
 import { GravityStarsBackground } from '@/components/animate-ui/components/backgrounds/gravity-stars';
+import { PageRobot } from '@/components/landing/PageRobot';
 
-const PIPELINE_STEPS = [
+const PIPELINE_STEPS: PipelineStepCard[] = [
   {
     number: '01',
     title: 'A URL becomes a video id',
     description:
       'You paste a YouTube video URL. ToxiScan parses it to extract the video id — the same id YouTube itself uses to identify the video, regardless of which URL shape you pasted (watch, share link, or Shorts).',
-    illustration: 'url' as const,
+    illustration: 'paste',
     accent: '#a8c8e8',
   },
   {
@@ -36,7 +36,7 @@ const PIPELINE_STEPS = [
     title: 'Comments and replies are fetched',
     description:
       'ToxiScan calls the YouTube Data API v3 for that video and pulls up to two hundred comments per request — replies included, so a reply can later be read against the comment it answers.',
-    illustration: 'fetch' as const,
+    illustration: 'fetch',
     accent: '#c8b8e0',
   },
   {
@@ -44,7 +44,7 @@ const PIPELINE_STEPS = [
     title: 'Each comment is routed by language',
     description:
       'Hindi, Marathi, Bengali, Tamil, Telugu, Urdu and romanised or code-mixed Indic text go to Hate-speech-CNERG/indic-abusive-allInOne-MuRIL. English and European languages go to unitary/multilingual-toxic-xlm-roberta.',
-    illustration: 'score' as const,
+    illustration: 'score',
     accent: '#a7e5d3',
   },
   {
@@ -52,16 +52,16 @@ const PIPELINE_STEPS = [
     title: 'A language model reads it again',
     description:
       'Llama 3.3 70B, running on Groq, catches what a classifier cannot express: sarcasm, implicit harm, cruelty that exists only in context. It also sets severity, and the category for Indic text, since MuRIL only answers abusive or not.',
-    illustration: 'score' as const,
-    accent: '#e8b8c4',
+    illustration: 'aggregate',
+    accent: '#f4c5a8',
   },
   {
     number: '05',
-    title: 'Verdicts are merged and aggregated',
+    title: 'Read the result',
     description:
-      'The two readings are merged into one category from nine and one severity from five, then rolled up into a report: breakdowns, confidence, where the two disagreed, and the comments driving each label.',
-    illustration: 'aggregate' as const,
-    accent: '#f4c5a8',
+      'An overall score, a breakdown across nine categories, and the comments driving each one. Save it, export it, or flag anything the model got wrong.',
+    illustration: 'read',
+    accent: '#e8b8c4',
   },
 ];
 
@@ -104,43 +104,6 @@ const LIMITATIONS = [
   },
 ];
 
-const TECH_STACK = [
-  {
-    name: 'Next.js + React',
-    description: 'The frontend you are using now — server-rendered pages, a client playground.',
-    accent: '#a8c8e8',
-  },
-  {
-    name: 'YouTube Data API v3',
-    description: 'The source of every video, comment and reply ToxiScan reads.',
-    accent: '#c8b8e0',
-  },
-  {
-    name: 'MuRIL abusive classifier',
-    description:
-      'Hate-speech-CNERG/indic-abusive-allInOne-MuRIL, on Hugging Face Inference — Indic and code-mixed text, abusive or not.',
-    accent: '#a7e5d3',
-  },
-  {
-    name: 'XLM-RoBERTa toxicity model',
-    description:
-      'unitary/multilingual-toxic-xlm-roberta, also on Hugging Face — seven labels across English and six European languages.',
-    accent: '#f4c5a8',
-  },
-  {
-    name: 'Llama 3.3 70B on Groq',
-    description:
-      'The second pass: sarcasm, context, severity, and the category MuRIL cannot give.',
-    accent: '#e8b8c4',
-  },
-  {
-    name: 'Supabase + Postgres',
-    description:
-      'Accounts, saved scans, notes and tags, exported reports, and the feedback that becomes ground truth.',
-    accent: '#a8c8e8',
-  },
-];
-
 export default function AboutPage() {
   return (
     <>
@@ -150,39 +113,9 @@ export default function AboutPage() {
 
       <main>
         {/* ---------------------------------------------------------- */}
-        {/* HERO — gravity stars + 3D neural net + char-split headline */}
+        {/* HERO — char-split headline                                  */}
         {/* ---------------------------------------------------------- */}
         <section className="relative overflow-hidden">
-          <div
-            className="pointer-events-auto absolute inset-0 z-0"
-            aria-hidden="true"
-            style={{ color: 'var(--color-ink)' }}
-          >
-            <GravityStarsBackground
-              starsCount={100}
-              starsSize={2.2}
-              starsOpacity={0.5}
-              glowIntensity={16}
-              glowAnimation="ease"
-              movementSpeed={0.2}
-              mouseInfluence={140}
-              mouseGravity="attract"
-              gravityStrength={45}
-              starsInteraction
-              starsInteractionType="merge"
-              className="h-full w-full"
-            />
-            <div
-              className="absolute inset-0 bg-[linear-gradient(180deg,rgba(245,245,245,0.6)_0%,rgba(245,245,245,0.18)_45%,rgba(245,245,245,0)_100%)]"
-              aria-hidden="true"
-            />
-          </div>
-
-          {/* 3D neural net on the right side */}
-          <div className="pointer-events-none absolute right-[-60px] top-0 z-[1] hidden h-[520px] w-[600px] lg:block">
-            <Inline3D kind="neural-net" />
-          </div>
-
           <div className="editorial-container relative z-10 pt-20 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24">
             <Reveal axis="3d" direction="up" distance={20} rotateDeg={6} duration={0.9}>
               <span className="caption-uppercase text-muted block">About</span>
@@ -213,58 +146,37 @@ export default function AboutPage() {
         </section>
 
         {/* ---------------------------------------------------------- */}
-        {/* THE PIPELINE — scroll-locked story of a comment travelling */}
+        {/* HOW IT WORKS — vertical scroll drives a horizontal chapter */}
         {/* ---------------------------------------------------------- */}
-        <ScrollLockSection
-          distanceVh={3.6}
-          className="relative bg-[var(--color-canvas-soft)]"
-          innerClassName="px-6"
-          fadeOut={false}
+        <HorizontalScroll
+          distanceVh={3.5}
+          className="relative overflow-hidden bg-[var(--color-canvas-soft)]"
+          innerClassName="px-0"
         >
-          <div className="mx-auto w-full max-w-[1100px]">
-            <Reveal axis="3d" direction="none" distance={0} rotateDeg={5} duration={1.0}>
-              <div className="text-center">
-                <p className="caption-uppercase text-muted">How it works</p>
-                <h2 className="display-lg mt-2">The genuine pipeline, no simplifications.</h2>
-              </div>
-            </Reveal>
-
-            <div className="mt-14 grid gap-6 lg:grid-cols-2">
-              {PIPELINE_STEPS.map((step, i) => (
-                <PipelineStep
-                  key={step.number}
-                  number={step.number}
-                  title={step.title}
-                  description={step.description}
-                  index={i}
-                  accent={step.accent}
-                  illustration={step.illustration}
-                />
-              ))}
-            </div>
-          </div>
-        </ScrollLockSection>
+          {PIPELINE_STEPS.map((step, i) => (
+            <StepCard key={step.number} step={step} index={i} />
+          ))}
+        </HorizontalScroll>
 
         {/* ---------------------------------------------------------- */}
-        {/* THE STATES — 3D token backdrop + label grid                 */}
+        {/* THE CATEGORIES — heading band; the cards themselves live    */}
+        {/* in the pinned <LabelGallery /> directly below, which shares */}
+        {/* this band's silver surface so the two read as one section.  */}
         {/* ---------------------------------------------------------- */}
         <Section
-          className="border-t border-hairline relative overflow-hidden"
+          className="border-t border-hairline relative overflow-hidden bg-[var(--color-surface-strong)]"
           eyebrow="The categories"
           heading="Nine categories, grouped into five families here."
-          description="A comment is placed in one of nine categories and given a severity from none through to critical. These five families are the summary view. Severity is never carried by a loud red banner — it is carried by language and by the ink colour used in charts and text."
+          description="Severity is never carried by a loud red banner — it is carried by language. Here is what each family means and how it is weighted."
+          containerClassName="!pb-0 [&>div:first-child]:mb-0"
         >
-          {/* Floating 3D tokens behind the section */}
-          <div className="pointer-events-none absolute right-[-100px] top-[10%] z-0 hidden h-[480px] w-[600px] opacity-90 lg:block">
-            <Inline3D kind="floating-tokens" />
-          </div>
-
-          <div className="relative z-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {LABEL_ORDER.map((label, i) => (
-              <LabelCard key={label} meta={LABEL_META[label]} index={i} />
-            ))}
-          </div>
+          <></>
         </Section>
+
+        {/* The five label cards ride a pinned horizontal gallery: scrolling
+            vertically past the 300vh container translates the track sideways,
+            bringing each card in turn through the centred sticky slot. */}
+        <LabelGallery />
 
         {/* ---------------------------------------------------------- */}
         {/* LIMITATIONS — staggered 3D tumble cards                    */}
@@ -286,64 +198,6 @@ export default function AboutPage() {
               />
             ))}
           </div>
-        </Section>
-
-        {/* ---------------------------------------------------------- */}
-        {/* PRIVACY — single editorial card                            */}
-        {/* ---------------------------------------------------------- */}
-        <Section
-          className="border-t border-hairline"
-          soft
-          containerClassName="max-w-[720px]"
-          eyebrow="Privacy"
-          heading="Your scans are yours."
-        >
-          <Reveal axis="3d" direction="up" distance={32} rotateDeg={4} duration={1.0} blur>
-            <p className="body-md text-body">
-              Analysing a video requires signing in, because the scan is saved to your
-              account — your history, anything you save with notes and tags, and the
-              reports you export. Only you can read it. The playground is the exception:
-              text you type there is scored and returned, and nothing about it is kept.
-            </p>
-          </Reveal>
-        </Section>
-
-        {/* ---------------------------------------------------------- */}
-        {/* TECH STACK — list with parallax items                      */}
-        {/* ---------------------------------------------------------- */}
-        <Section
-          className="border-t border-hairline"
-          eyebrow="Built with"
-          heading="The stack behind the pipeline."
-        >
-          <Reveal axis="3d" direction="up" distance={32} rotateDeg={4} duration={0.9} blur>
-            <dl className="mt-10 flex flex-col">
-              {TECH_STACK.map((item, i) => (
-                <Parallax key={item.name} speed={20} mode="wrap">
-                  <div
-                    className="group relative flex flex-col gap-2 border-t border-hairline py-6 first:border-t-0 sm:flex-row sm:items-baseline sm:gap-8 transition-colors duration-500 hover:bg-[var(--color-surface-card)]"
-                    style={{ paddingInline: '0.75rem', borderRadius: 'var(--radius-md)' }}
-                  >
-                    <dt className="title-sm w-full shrink-0 text-ink sm:w-[220px] flex items-baseline gap-3">
-                      <span
-                        className="caption text-muted-soft"
-                        aria-hidden="true"
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span
-                        className="inline-block h-2 w-2 rounded-full transition-transform duration-500 group-hover:scale-150"
-                        style={{ background: item.accent }}
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </dt>
-                    <dd className="body-sm text-body">{item.description}</dd>
-                  </div>
-                </Parallax>
-              ))}
-            </dl>
-          </Reveal>
         </Section>
 
         {/* ---------------------------------------------------------- */}
@@ -377,6 +231,7 @@ export default function AboutPage() {
         </Section>
       </main>
       <Footer />
+      <PageRobot />
     </>
   );
 }

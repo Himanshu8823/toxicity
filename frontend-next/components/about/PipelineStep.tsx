@@ -61,7 +61,7 @@ export function PipelineStep({
         </div>
 
         {/* Illustration */}
-        <div className="relative mt-6 h-[160px] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-surface-strong)]">
+        <div className="relative mt-6 w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-surface-strong)]">
           <PipelineIllustration kind={illustration} accent={accent} />
         </div>
       </CardSpotlight>
@@ -80,7 +80,7 @@ function PipelineIllustration({
 }) {
   if (kind === 'url') {
     return (
-      <svg viewBox="0 0 320 160" className="h-full w-full">
+      <svg viewBox="0 0 320 160" className="h-auto w-full">
         <defs>
           <linearGradient id={`bg-url-${accent}`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={accent} stopOpacity="0.4" />
@@ -104,7 +104,7 @@ function PipelineIllustration({
   }
   if (kind === 'fetch') {
     return (
-      <svg viewBox="0 0 320 160" className="h-full w-full">
+      <svg viewBox="0 0 320 160" className="h-auto w-full">
         <defs>
           <linearGradient id={`bg-fetch-${accent}`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={accent} stopOpacity="0.35" />
@@ -132,7 +132,7 @@ function PipelineIllustration({
   }
   if (kind === 'score') {
     return (
-      <svg viewBox="0 0 320 160" className="h-full w-full">
+      <svg viewBox="0 0 320 160" className="h-auto w-full">
         <defs>
           <linearGradient id={`bg-score-${accent}`} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={accent} stopOpacity="0.35" />
@@ -155,7 +155,7 @@ function PipelineIllustration({
   }
   // aggregate
   return (
-    <svg viewBox="0 0 320 160" className="h-full w-full">
+    <svg viewBox="0 0 320 160" className="h-auto w-full">
       <defs>
         <linearGradient id={`bg-agg-${accent}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={accent} stopOpacity="0.35" />

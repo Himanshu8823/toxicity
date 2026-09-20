@@ -5,6 +5,7 @@ import { Section } from '@/components/ui/Section';
 import { Scene } from '@/components/three/Scene';
 import { OrbField } from '@/components/three/OrbField';
 import { Playground } from '@/components/playground/Playground';
+import { PageRobot } from '@/components/landing/PageRobot';
 
 export const metadata: Metadata = {
   title: 'Playground — ToxiScan',
@@ -75,6 +76,7 @@ export default function PlaygroundPage() {
         </Section>
       </main>
       <Footer />
+      <PageRobot />
     </>
   );
 }
