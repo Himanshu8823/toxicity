@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { AuthField } from '@/components/auth/AuthField';
+import { Button } from '@/components/ui/Button';
 
 const NO_ACCESS_MESSAGE = 'This account does not have administrator access.';
 
@@ -30,7 +31,11 @@ export function AdminLoginForm() {
     });
 
     if (signInError || !data.user) {
-      setError('Those credentials were not accepted.');
+      setError(
+        signInError?.message === 'Invalid login credentials'
+          ? 'That email and password combination is not recognised.'
+          : signInError?.message ?? 'Sign-in failed.'
+      );
       setSubmitting(false);
       return;
     }
@@ -57,57 +62,65 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-5" noValidate>
+    <div className="hairline-card p-7 shadow-[var(--shadow-soft-drop)] sm:p-9">
+      <p className="caption-uppercase text-muted">Restricted</p>
+      <h1 className="display-lg mt-3 text-ink">Administrator access</h1>
+      <p className="body-md mt-3 text-body">
+        Credentials are verified against the administrator role. Every sign-in
+        attempt on this surface is recorded.
+      </p>
+
       {suspended && (
         <p
           role="alert"
-          className="caption border border-[#3a3633] bg-surface-dark-elevated p-3 font-mono text-on-dark-soft"
+          className="caption mt-6 rounded-[var(--radius-md)] border border-hairline-strong bg-canvas-soft p-3 text-body"
         >
           This administrator account has been suspended.
         </p>
       )}
 
-      <AuthField
-        mono
-        label="Email"
-        type="email"
-        name="email"
-        autoComplete="email"
-        placeholder="admin@toxiscan.app"
-        required
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-      />
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5" noValidate>
+        <AuthField
+          label="Email"
+          type="email"
+          name="email"
+          autoComplete="email"
+          placeholder="admin@toxiscan.app"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
 
-      <AuthField
-        mono
-        label="Password"
-        type="password"
-        name="password"
-        autoComplete="current-password"
-        placeholder="••••••••"
-        required
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-      />
+        <AuthField
+          label="Password"
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          placeholder="••••••••"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
 
-      {error && (
-        <p
-          role="alert"
-          className="caption border-l-2 border-[var(--color-semantic-error)] pl-3 font-mono text-on-dark-soft"
-        >
-          {error}
-        </p>
-      )}
+        {error && (
+          <p role="alert" className="caption text-[var(--color-semantic-error)]">
+            {error}
+          </p>
+        )}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        aria-busy={submitting || undefined}
-        className="btn-type mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[var(--radius-sm)] bg-on-dark font-mono uppercase tracking-[0.08em] text-ink transition-opacity duration-150 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-dark disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {submitting ? 'Verifying' : 'Authenticate'}
-      </button>
-    </form>
+        <Button type="submit" loading={submitting} className="mt-1 w-full">
+          {submitting ? 'Verifying' : 'Sign in'}
+        </Button>
+      </form>
+
+      <p className="body-sm mt-7 border-t border-hairline pt-6 text-muted">
+        Not an administrator?{' '}
+        <a href="/login" className="text-ink underline underline-offset-4">
+          Standard sign-in
+        </a>
+      </p>
+    </div>
   );
 }
+
+export default AdminLoginForm;

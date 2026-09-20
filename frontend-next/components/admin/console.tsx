@@ -179,7 +179,7 @@ const DOT_COLOR: Record<DotTone, string> = {
   positive: '#3f6b5c',
   warn: '#8a5a3c',
   critical: '#8a3f52',
-  idle: '#d6d3d1',
+  idle: 'var(--color-hairline-strong)',
 };
 
 export function StatusDot({ tone, label }: { tone: DotTone; label: string }) {

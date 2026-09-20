@@ -47,8 +47,17 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export function daysAgo(days: number): Date {
-  return new Date(Date.now() - days * DAY_MS);
+/**
+ * Returns an ISO timestamp for `n` days ago at midnight UTC.
+ *
+ * Why ISO and not `Date`: drizzle's `postgres-js` driver rejects a JS `Date`
+ * bound into a `sql\`...\`` template (it serialises the parameter as a JS
+ * object the driver cannot encode). The Postgres server needs the value as
+ * a string it can cast to `timestamptz`. Returning ISO from here means every
+ * caller just passes the string and the cast in SQL handles the rest.
+ */
+export function daysAgo(days: number): string {
+  return new Date(Date.now() - days * DAY_MS).toISOString();
 }
 
 // ─── Platform overview ───────────────────────────────────────────────────────
@@ -353,14 +362,24 @@ export async function listUsers(
     offset = 0,
   } = options;
 
-  const scanCount = sql<number>`(select count(*) from ${scans} where ${scans.userId} = ${profiles.id})::int`;
+  // Fully-qualified subqueries with explicit aliases. Drizzle does not always
+  // qualify column references inside a nested `sql\`...\`` template, and an
+  // unqualified `id` in a three-table join is ambiguous to Postgres — it
+  // fails with "column reference 'id' is ambiguous". Casting to a literal
+  // SQL fragment with table aliases sidesteps that entirely.
+  const scanCount = sql<number>`(
+    select count(*)::int
+    from "scans" "s"
+    where "s"."user_id" = "profiles"."id"
+  )`;
+
   const commentsAnalysed = sql<number>`(
-    select count(*)
-    from ${commentAnalyses}
-    join ${comments} on ${comments.id} = ${commentAnalyses.commentId}
-    join ${scans} on ${scans.id} = ${comments.scanId}
-    where ${scans.userId} = ${profiles.id}
-  )::int`;
+    select count(*)::int
+    from "comment_analyses" "ca"
+    join "comments" "c" on "c"."id" = "ca"."comment_id"
+    join "scans" "s" on "s"."id" = "c"."scan_id"
+    where "s"."user_id" = "profiles"."id"
+  )`;
 
   const sortColumn =
     sort === 'email'

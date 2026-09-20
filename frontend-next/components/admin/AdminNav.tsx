@@ -23,7 +23,7 @@ export function AdminNav({ items }: { items: readonly AdminNavItem[] }) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Admin sections" className="flex items-center gap-0.5">
+    <nav aria-label="Admin sections" className="flex flex-col gap-0.5">
       {items.map((item) => {
         // `/admin` must match only itself; every deeper section matches its subtree.
         const active =
@@ -37,7 +37,7 @@ export function AdminNav({ items }: { items: readonly AdminNavItem[] }) {
             href={item.href}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'relative inline-flex h-8 items-center gap-1.5 rounded-[var(--radius-xs)] px-2.5 text-[13px] font-medium transition-colors',
+              'relative flex h-8 items-center gap-1.5 rounded-[var(--radius-xs)] px-2.5 text-[13px] font-medium transition-colors',
               active
                 ? 'bg-surface-strong text-ink'
                 : 'text-muted hover:bg-surface-strong hover:text-ink'
@@ -45,7 +45,7 @@ export function AdminNav({ items }: { items: readonly AdminNavItem[] }) {
           >
             {item.label}
             {item.badge !== undefined && item.badge > 0 ? (
-              <span className="font-mono text-[10px] tabular-nums text-muted-soft">
+              <span className="ml-auto font-mono text-[10px] tabular-nums text-muted-soft">
                 {item.badge > 99 ? '99+' : item.badge}
               </span>
             ) : null}

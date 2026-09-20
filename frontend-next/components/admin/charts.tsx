@@ -1,190 +1,400 @@
+'use client';
+
+import { useId, useMemo } from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { CATEGORY_META } from '@/lib/analysis/taxonomy';
 import type { ToxicityCategory } from '@/lib/db/schema';
 import { Figure, formatCount, formatPercent } from './console';
 
 /**
- * Charts for the console, drawn as inline SVG on the server.
+ * Charts for the console.
  *
- * The public results pages use Recharts, which is the right call there: they
- * are interactive, they animate, and the bundle buys something. Here it buys
- * nothing. These charts are read, not explored, and shipping a charting runtime
- * to render a sparkline of daily counts would make the densest page in the app
- * also the heaviest.
+ * The user-facing results pages already ship Recharts because they are
+ * interactive surfaces — hovering a bar, reading a tooltip, scrubbing the axis
+ * is the experience. The console carries the same kind of data, and the
+ * previous server-only inline SVG treatment made the densest page in the app
+ * look the dullest. These versions are Client Components built on Recharts but
+ * styled in the console dialect — ink-on-canvas, hairlines rather than
+ * saturated fills, tabular numerals — so an admin reading a metric sees the
+ * same figure whether they read it here or on the public dashboard.
  *
- * Everything below is a Server Component with zero client JavaScript.
+ * Each chart also renders a visually-hidden table with the same numbers, so
+ * the information is reachable without sight.
  */
 
-// ─── Time series ─────────────────────────────────────────────────────────────
+// ─── Palette ──────────────────────────────────────────────────────────────────
+
+/** Axis ticks, grid lines, secondary text — kept off the ink scale. */
+const AXIS_COLOR = '#a8a29e';
+
+/** A muted ink wash for area fills — warm enough to read as a signal. */
+const AREA_INK = '#7a6a5c';
+const AREA_PASTEL = '#d9c7b8';
+
+/**
+ * Sequential ink shades used by the distribution bars when the caller hasn't
+ * supplied a per-row colour. Each row is darker than the last so the bars rank
+ * left-to-right without any extra annotation.
+ */
+const DISTRIBUTION_INKS = [
+  '#1f1d1b',
+  '#3a3633',
+  '#56504b',
+  '#736963',
+  '#8f837a',
+  '#aaa091',
+  '#c4bba8',
+  '#dbd2bf',
+  '#ebe3d1',
+];
+
+// ─── Tooltip shell ────────────────────────────────────────────────────────────
+
+/**
+ * The shell every chart tooltip uses. Keeps the visual language identical
+ * across the console — a hairline card with the value in tabular numerics —
+ * so the reader's eye doesn't have to relearn it per chart.
+ */
+function TooltipShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-[var(--radius-xs)] border border-hairline bg-surface-card px-3 py-2 shadow-[var(--shadow-soft-drop)]">
+      {children}
+    </div>
+  );
+}
+
+// ─── Time series ──────────────────────────────────────────────────────────────
 
 export interface SeriesPoint {
   day: string;
   value: number;
 }
 
+interface DailyTooltipPayload {
+  payload: SeriesPoint;
+}
+
+function DailyTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: DailyTooltipPayload[];
+}) {
+  if (!active || !payload || payload.length === 0) return null;
+  const point = payload[0].payload;
+
+  return (
+    <TooltipShell>
+      <p className="text-[12.5px] text-ink">
+        {new Date(point.day).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })}
+      </p>
+      <p className="mt-0.5 font-mono text-[11.5px] tabular-nums text-muted">
+        <Figure className="text-[11.5px]">{formatCount(point.value)}</Figure>{' '}
+        {point.value === 1 ? 'event' : 'events'}
+      </p>
+    </TooltipShell>
+  );
+}
+
 /**
- * A daily bar series.
+ * A daily series, drawn as an area chart with smooth monotone interpolation.
  *
- * Bars rather than a line: the underlying data is a count per discrete day, and
- * a line between two days implies values in between that do not exist.
+ * An area rather than bars because the shape of the run is the answer to the
+ * implicit question — a fortnight climbing is a finding a single tall bar
+ * would hide. The gradient fades to transparent so the chart reads as
+ * atmosphere against the canvas rather than a block of colour.
  */
 export function DailyBars({
   data,
   label,
-  height = 96,
+  height = 220,
 }: {
   data: readonly SeriesPoint[];
   label: string;
   height?: number;
 }) {
-  if (data.length === 0) {
+  const gradientId = useId();
+
+  const { rows, total, max } = useMemo(() => {
+    const total = data.reduce((sum, d) => sum + d.value, 0);
+    const max = data.reduce((peak, d) => (d.value > peak ? d.value : peak), 0);
+    return { rows: [...data], total, max };
+  }, [data]);
+
+  if (rows.length === 0) {
     return (
-      <p className="py-8 text-center text-[12.5px] text-muted-soft">
-        No activity in this period.
-      </p>
+      <div className="flex h-56 items-center justify-center">
+        <p className="text-[12.5px] text-muted-soft">No activity in this period.</p>
+      </div>
     );
   }
 
-  const max = Math.max(...data.map((d) => d.value), 1);
-  const total = data.reduce((sum, d) => sum + d.value, 0);
-  const width = 100;
-  const slot = width / data.length;
-  // Leave a hairline of space between bars, but never let them vanish on a
-  // 90-day range where each slot is well under a pixel.
-  const barWidth = Math.max(slot * 0.62, 0.35);
-
   return (
     <figure className="m-0">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        preserveAspectRatio="none"
-        className="w-full"
-        style={{ height }}
-        role="img"
-        aria-label={`${label}: ${formatCount(total)} across ${data.length} days, peaking at ${formatCount(max)}.`}
-      >
-        {/* Quartile guides, drawn behind the bars so they read as paper ruling. */}
-        {[0.25, 0.5, 0.75, 1].map((f) => (
-          <line
-            key={f}
-            x1={0}
-            x2={width}
-            y1={height - height * f}
-            y2={height - height * f}
-            stroke="#f0efed"
-            strokeWidth={0.5}
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-        {data.map((d, i) => {
-          const h = d.value === 0 ? 0 : Math.max((d.value / max) * height, 1.5);
-          return (
-            <rect
-              key={d.day}
-              x={i * slot + (slot - barWidth) / 2}
-              y={height - h}
-              width={barWidth}
-              height={h}
-              fill="#292524"
-              opacity={0.82}
-            >
-              <title>{`${d.day}: ${formatCount(d.value)}`}</title>
-            </rect>
-          );
-        })}
-        <line
-          x1={0}
-          x2={width}
-          y1={height}
-          y2={height}
-          stroke="#d6d3d1"
-          strokeWidth={1}
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <figcaption className="mt-2 flex items-center justify-between text-[11.5px] text-muted-soft">
-        <span>{data[0]?.day}</span>
+      <div style={{ height }} className="w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={rows}
+            margin={{ top: 8, right: 12, left: 0, bottom: 4 }}
+          >
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={AREA_PASTEL} stopOpacity={0.95} />
+                <stop offset="100%" stopColor={AREA_PASTEL} stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              stroke="var(--color-hairline)"
+              strokeDasharray="2 4"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="day"
+              tick={{ fill: AXIS_COLOR, fontSize: 11 }}
+              axisLine={{ stroke: 'var(--color-hairline)' }}
+              tickLine={false}
+              minTickGap={28}
+              tickFormatter={(value: string) =>
+                new Date(value).toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: 'short',
+                })
+              }
+            />
+            <YAxis
+              tick={{ fill: AXIS_COLOR, fontSize: 11 }}
+              axisLine={false}
+              tickLine={false}
+              width={48}
+              allowDecimals={false}
+              tickFormatter={(value: number) =>
+                value >= 1000 ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k` : value.toString()
+              }
+            />
+            <Tooltip
+              content={<DailyTooltip />}
+              cursor={{ stroke: 'var(--color-hairline-strong)', strokeWidth: 1 }}
+            />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke={AREA_INK}
+              strokeWidth={1.75}
+              fill={`url(#${gradientId})`}
+              dot={{ r: 2.25, fill: AREA_INK, stroke: 'var(--color-surface-card)', strokeWidth: 1 }}
+              activeDot={{ r: 4.5, fill: AREA_INK, stroke: 'var(--color-surface-card)', strokeWidth: 2 }}
+              animationDuration={600}
+              isAnimationActive
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11.5px] text-muted-soft">
+        <span>{rows[0]?.day}</span>
         <span>
-          peak <Figure className="text-[11.5px]">{formatCount(max)}</Figure> · total{' '}
-          <Figure className="text-[11.5px]">{formatCount(total)}</Figure>
+          peak{' '}
+          <Figure className="text-[11.5px]">{formatCount(max)}</Figure> · total{' '}
+          <Figure className="text-[11.5px]">{formatCount(total)}</Figure> ·{' '}
+          <Figure className="text-[11.5px]">{rows.length}</Figure> days
         </span>
-        <span>{data[data.length - 1]?.day}</span>
+        <span>{rows[rows.length - 1]?.day}</span>
       </figcaption>
+
+      <table className="sr-only">
+        <caption>{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.day}>
+              <td>{row.day}</td>
+              <td>{row.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </figure>
   );
 }
 
 // ─── Distribution ────────────────────────────────────────────────────────────
 
+interface DistributionRow {
+  key: string;
+  label: string;
+  value: number;
+  ink?: string;
+}
+
+interface DistributionTooltipPayload {
+  payload: DistributionRow & { share: number };
+}
+
+function DistributionTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: DistributionTooltipPayload[];
+}) {
+  if (!active || !payload || payload.length === 0) return null;
+  const row = payload[0].payload;
+
+  return (
+    <TooltipShell>
+      <p
+        className="text-[12.5px] font-medium"
+        style={row.ink ? { color: row.ink } : undefined}
+      >
+        {row.label}
+      </p>
+      <p className="mt-0.5 font-mono text-[11.5px] tabular-nums text-muted">
+        <Figure className="text-[11.5px]">{formatCount(row.value)}</Figure> ·{' '}
+        {formatPercent(row.share, 1)}
+      </p>
+    </TooltipShell>
+  );
+}
+
 /**
- * A horizontal distribution, rendered as a labelled table rather than a pie.
+ * A categorical distribution, drawn as horizontal bars with hover detail.
  *
- * A nine-slice pie with a long tail is unreadable, and the question being asked
- * of this data is "how many, and what share" — both of which a row of figures
- * answers better than an arc does. The bar is an accent on the number, not the
- * number itself.
+ * Horizontal because category names are long and a vertical bar would force
+ * the labels to rotate into illegibility on a laptop width. The bar is an
+ * accent on the figure rather than the figure itself — the number on the
+ * right stays the thing being read.
  */
 export function DistributionBars({
   rows,
   caption,
   emptyMessage = 'Nothing recorded yet.',
+  height,
 }: {
   rows: readonly { key: string; label: string; value: number; ink?: string }[];
   caption: string;
   emptyMessage?: string;
+  /** Optional override; default scales with the row count. */
+  height?: number;
 }) {
-  if (rows.length === 0) {
+  const chartRows = useMemo(() => {
+    const total = rows.reduce((sum, r) => sum + r.value, 0);
+    return rows.map((r) => ({
+      ...r,
+      share: total > 0 ? (r.value / total) * 100 : 0,
+    }));
+  }, [rows]);
+
+  const total = chartRows.reduce((sum, r) => sum + r.value, 0);
+
+  if (chartRows.length === 0 || total === 0) {
     return (
-      <p className="py-8 text-center text-[12.5px] text-muted-soft">
-        {emptyMessage}
-      </p>
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[12.5px] text-muted-soft">{emptyMessage}</p>
+      </div>
     );
   }
 
-  const total = rows.reduce((sum, r) => sum + r.value, 0);
-  const max = Math.max(...rows.map((r) => r.value), 1);
+  const computedHeight = height ?? Math.max(160, chartRows.length * 36 + 24);
 
   return (
-    <table className="w-full border-collapse text-left">
-      <caption className="sr-only">{caption}</caption>
-      <thead className="sr-only">
-        <tr>
-          <th scope="col">Label</th>
-          <th scope="col">Count</th>
-          <th scope="col">Share</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={row.key}>
-            <th
-              scope="row"
-              className="w-[38%] py-[5px] pr-3 text-[12.5px] font-normal text-body"
+    <figure className="m-0">
+      <div style={{ height: computedHeight }} className="w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={chartRows}
+            layout="vertical"
+            margin={{ top: 4, right: 16, left: 0, bottom: 4 }}
+            barCategoryGap={6}
+          >
+            <CartesianGrid
+              stroke="var(--color-hairline)"
+              strokeDasharray="2 4"
+              horizontal={false}
+            />
+            <XAxis
+              type="number"
+              tick={{ fill: AXIS_COLOR, fontSize: 11 }}
+              axisLine={{ stroke: 'var(--color-hairline)' }}
+              tickLine={false}
+              allowDecimals={false}
+            />
+            <YAxis
+              type="category"
+              dataKey="label"
+              tick={{ fill: 'var(--color-ink)', fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+              width={140}
+            />
+            <Tooltip
+              content={<DistributionTooltip />}
+              cursor={{ fill: 'var(--color-surface-strong)' }}
+            />
+            <Bar
+              dataKey="value"
+              radius={[0, 3, 3, 0]}
+              animationDuration={600}
+              isAnimationActive
             >
-              <span style={row.ink ? { color: row.ink } : undefined}>
-                {row.label}
-              </span>
-            </th>
-            <td className="py-[5px] pr-3">
-              <span
-                aria-hidden="true"
-                className="block h-[7px] rounded-[1px]"
-                style={{
-                  width: `${Math.max((row.value / max) * 100, 1)}%`,
-                  backgroundColor: row.ink ?? '#292524',
-                  opacity: 0.55,
-                }}
-              />
-            </td>
-            <td className="w-[14%] py-[5px] text-right">
-              <Figure className="text-[12.5px]">{formatCount(row.value)}</Figure>
-            </td>
-            <td className="w-[13%] py-[5px] pl-2 text-right text-[12px] text-muted-soft">
-              {total === 0 ? '—' : formatPercent(row.value / total, 1)}
-            </td>
+              {chartRows.map((row, i) => (
+                <Cell
+                  key={row.key}
+                  fill={row.ink ?? DISTRIBUTION_INKS[i % DISTRIBUTION_INKS.length]}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <table className="sr-only">
+        <caption>{caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Label</th>
+            <th scope="col">Count</th>
+            <th scope="col">Share</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {chartRows.map((row) => (
+            <tr key={row.key}>
+              <td>{row.label}</td>
+              <td>{row.value}</td>
+              <td>{row.share.toFixed(1)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </figure>
   );
 }
 
@@ -211,67 +421,125 @@ export function CategoryDistribution({
 
 // ─── ROC curve ───────────────────────────────────────────────────────────────
 
+interface RocPoint {
+  falsePositiveRate: number;
+  truePositiveRate: number;
+}
+
+interface RocTooltipPayload {
+  payload: RocPoint & { index: number };
+}
+
+function RocTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: RocTooltipPayload[];
+}) {
+  if (!active || !payload || payload.length === 0) return null;
+  const p = payload[0].payload;
+
+  return (
+    <TooltipShell>
+      <p className="text-[12.5px] text-ink">Operating point #{p.index + 1}</p>
+      <p className="mt-0.5 font-mono text-[11.5px] tabular-nums text-muted">
+        FPR {(p.falsePositiveRate * 100).toFixed(1)}% · TPR{' '}
+        {(p.truePositiveRate * 100).toFixed(1)}%
+      </p>
+    </TooltipShell>
+  );
+}
+
 /**
  * The ROC curve for one slice.
  *
- * Square by construction, with the chance diagonal drawn in: the whole point of
- * the plot is how far the curve sits above that diagonal, and without it the
- * shape says nothing.
+ * The chance diagonal is drawn behind the curve with a dashed reference line
+ * so the gap — which is what AUC actually measures — is the visual story
+ * rather than the absolute shape.
  */
 export function RocCurve({
   points,
   auc,
-  size = 180,
+  size = 220,
 }: {
   points: readonly { falsePositiveRate: number; truePositiveRate: number }[];
   auc: number;
   size?: number;
 }) {
+  const chartData = useMemo(
+    () => points.map((p, i) => ({ ...p, index: i })),
+    [points]
+  );
+
   if (points.length < 2) {
     return (
-      <p className="py-6 text-center text-[12px] text-muted-soft">
-        Not enough labelled data to plot a curve.
-      </p>
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[12px] text-muted-soft">
+          Not enough labelled data to plot a curve.
+        </p>
+      </div>
     );
   }
 
-  const path = points
-    .map(
-      (p, i) =>
-        `${i === 0 ? 'M' : 'L'} ${(p.falsePositiveRate * size).toFixed(2)} ${(
-          size - p.truePositiveRate * size
-        ).toFixed(2)}`
-    )
-    .join(' ');
-
   return (
     <figure className="m-0">
-      <svg
-        viewBox={`0 0 ${size} ${size}`}
-        className="h-auto w-full max-w-[220px]"
-        role="img"
-        aria-label={`ROC curve with area under curve ${auc.toFixed(3)}.`}
-      >
-        <rect
-          x={0}
-          y={0}
-          width={size}
-          height={size}
-          fill="#fafafa"
-          stroke="#e7e5e4"
-        />
-        <line
-          x1={0}
-          y1={size}
-          x2={size}
-          y2={0}
-          stroke="#d6d3d1"
-          strokeWidth={1}
-          strokeDasharray="3 3"
-        />
-        <path d={path} fill="none" stroke="#292524" strokeWidth={1.5} />
-      </svg>
-      <figcaption className="mt-1.5 text-[11.5px] text-muted">
+      <div style={{ width: '100%', height: size, maxWidth: size }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={chartData}
+            margin={{ top: 12, right: 12, bottom: 12, left: 12 }}
+          >
+            <CartesianGrid
+              stroke="var(--color-hairline)"
+              strokeDasharray="2 4"
+            />
+            <XAxis
+              type="number"
+              dataKey="falsePositiveRate"
+              domain={[0, 1]}
+              tick={{ fill: AXIS_COLOR, fontSize: 11 }}
+              axisLine={{ stroke: 'var(--color-hairline)' }}
+              tickLine={false}
+              tickFormatter={(v: number) => `${Math.round(v * 100)}%`}
+            />
+            <YAxis
+              type="number"
+              dataKey="truePositiveRate"
+              domain={[0, 1]}
+              tick={{ fill: AXIS_COLOR, fontSize: 11 }}
+              axisLine={{ stroke: 'var(--color-hairline)' }}
+              tickLine={false}
+              tickFormatter={(v: number) => `${Math.round(v * 100)}%`}
+              width={36}
+            />
+            <Tooltip
+              content={<RocTooltip />}
+              cursor={{ stroke: 'var(--color-hairline-strong)', strokeWidth: 1 }}
+            />
+            <ReferenceLine
+              segment={[
+                { x: 0, y: 0 },
+                { x: 1, y: 1 },
+              ]}
+              stroke="var(--color-hairline-strong)"
+              strokeDasharray="3 3"
+              ifOverflow="extendDomain"
+            />
+            <Line
+              type="monotone"
+              dataKey="truePositiveRate"
+              stroke="var(--color-ink)"
+              strokeWidth={1.75}
+              dot={{ r: 2.5, fill: 'var(--color-ink)', stroke: 'var(--color-surface-card)', strokeWidth: 1 }}
+              activeDot={{ r: 4.5, fill: 'var(--color-ink)', stroke: 'var(--color-surface-card)', strokeWidth: 2 }}
+              animationDuration={600}
+              isAnimationActive
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <figcaption className="mt-2 text-[11.5px] text-muted">
         Dashed line is chance (AUC 0.500). Area under curve{' '}
         <Figure className="text-[11.5px]">{auc.toFixed(3)}</Figure>.
       </figcaption>
